@@ -1,23 +1,24 @@
 package com.deloitte.ads.mariosy;
 
-import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class User {
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    private static AtomicInteger seq = new AtomicInteger();
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    private UUID id;
+    private int id;
 
     public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.id = UUID.randomUUID();
+        this.id = seq.incrementAndGet();
     }
 
     private String firstName;

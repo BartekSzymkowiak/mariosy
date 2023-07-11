@@ -1,42 +1,42 @@
 package com.deloitte.ads.mariosy;
 
-
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Marios {
-    public Marios(User creator, Set<User> receivers, MariosType type) {
-        this.creator = creator;
-        this.receivers = receivers;
+    public Marios(int creatorId, Set<Integer> receiversIds, MariosType type) {
+        this.creatorId = creatorId;
+        this.receiversIds = receiversIds;
         this.type = type;
         this.creationDateTime = LocalDateTime.now();
-        this.id = UUID.randomUUID();
+        this.id = seq.incrementAndGet();
         this.comment = "";
     }
+    private static AtomicInteger seq = new AtomicInteger();
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public User getCreator() {
-        return creator;
+    public Integer getCreatorId() {
+        return creatorId;
     }
 
-    public void setCreator(User creator) {
-        this.creator = creator;
+    public void setCreatorId(int creatorId) {
+        this.creatorId = creatorId;
     }
 
-    public Set<User> getReceivers() {
-        return receivers;
+    public Set<Integer> getReceiversIds() {
+        return receiversIds;
     }
 
-    public void setReceivers(Set<User> receivers) {
-        this.receivers = receivers;
+    public void setReceiversIds(Set<Integer> receiversIds) {
+        this.receiversIds = receiversIds;
     }
 
     public LocalDateTime getCreationDateTime() {
@@ -47,10 +47,10 @@ public class Marios {
         this.creationDateTime = creationDateTime;
     }
 
-    private UUID id;
-    private User creator;
+    private Integer id;
+    private Integer creatorId;
 
-    private Set<User> receivers;
+    private Set<Integer> receiversIds;
 
     private LocalDateTime creationDateTime;
 
@@ -74,23 +74,4 @@ public class Marios {
 
     private String comment;
 
-    @Override
-    public String toString() {
-        String start = "Marios\n";
-        String creator = this.creator.getFirstName() + " " + this.creator.getLastName();
-
-        StringBuilder sBuilder = new StringBuilder();
-        sBuilder.append(start).append(String.format("creator: %s",creator))
-                .append("\n")
-                .append(String.format("type: %s",this.type.toString()))
-                .append("\n")
-                .append(String.format("Comment: %s",this.comment))
-                .append("\nReceivers:\n");
-        String receiver;
-        for(User u : this.receivers){
-            sBuilder.append(String.format("\t %s %s",u.getFirstName(),u.getLastName()));
-        }
-
-        return sBuilder.toString();
-    }
 }

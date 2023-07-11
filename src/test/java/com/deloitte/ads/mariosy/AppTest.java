@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,27 +13,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class AppTest {
 
-    private final List<User> users = Arrays.asList(new User("John","Doe"),
-                                             new User("Johny","Doe"),
-                                             new User("Johan","Doe"),
-                                             new User("Jan","Doe"));
-    private final String shortComment = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+    private List<User> users = CompanyData.getEmployees();
+    private static final String SHORT_COMMENT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
     private App app;
 
     @BeforeEach
     public void init(){
-        app = new App(new HashSet<User>(users));
+        app = new App(new HashSet<User>(this.users));
     }
 
     @Test
     void createMariosOneReceiver() {
         // given
         User creator = users.get(0);
-        Set<User> receivers = new HashSet<User>();
-        receivers.add(users.get(1));
+        Set<Integer> receiversIds = new HashSet<Integer>();
+        receiversIds.add(users.get(1).getId());
         // when
-        boolean result = app.createMarios(creator, receivers, MariosType.MARIOS_T1, shortComment);
+        boolean result = app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T1, SHORT_COMMENT);
         // then
         Assertions.assertTrue(result);
     }
@@ -43,11 +39,11 @@ class AppTest {
     void createMariosManyReceivers() {
         // given
         User creator = users.get(0);
-        Set<User> receivers = new HashSet<User>();
-        receivers.add(users.get(1));
-        receivers.add(users.get(2));
+        Set<Integer> receiversIds = new HashSet<Integer>();
+        receiversIds.add(users.get(1).getId());
+        receiversIds.add(users.get(2).getId());
         // when
-        boolean result = app.createMarios(creator, receivers, MariosType.MARIOS_T1, shortComment);
+        boolean result = app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T1, SHORT_COMMENT);
         // then
         Assertions.assertTrue(result);
     }
@@ -55,10 +51,10 @@ class AppTest {
     void createMariosCreatorIsReceiver() {
         // given
         User creator = users.get(0);
-        Set<User> receivers = new HashSet<User>();
-        receivers.add(users.get(0));
+        Set<Integer> receiversIds = new HashSet<Integer>();
+        receiversIds.add(users.get(0).getId());
         // when
-        boolean result = app.createMarios(creator, receivers, MariosType.MARIOS_T1, shortComment);
+        boolean result = app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T1, SHORT_COMMENT);
         // then
         Assertions.assertFalse(result);
     }
@@ -67,11 +63,11 @@ class AppTest {
     void createMariosCreatorHasSameNameAsReceiver() {
         // given
         User creator = users.get(0);
-        Set<User> receivers = new HashSet<User>();
+        Set<Integer> receivers = new HashSet<Integer>();
         User receiver = new User(creator.getFirstName(), creator.getLastName());
-        receivers.add(receiver);
+        receivers.add(receiver.getId());
         // when
-        boolean result = app.createMarios(creator, receivers, MariosType.MARIOS_T1, shortComment);
+        boolean result = app.createMarios(creator.getId(), receivers, MariosType.MARIOS_T1, SHORT_COMMENT);
         // then
         Assertions.assertTrue(result);
     }
@@ -80,9 +76,9 @@ class AppTest {
     void createMariosNoReceivers() {
         // given
         User creator = users.get(0);
-        Set<User> receivers = new HashSet<User>();
+        Set<Integer> receivers = new HashSet<Integer>();
         // when
-        boolean result = app.createMarios(creator, receivers, MariosType.MARIOS_T1, shortComment);
+        boolean result = app.createMarios(creator.getId(), receivers, MariosType.MARIOS_T1, SHORT_COMMENT);
         // then
         Assertions.assertFalse(result);
     }
@@ -91,10 +87,10 @@ class AppTest {
     void createMariosEmptyComment() {
         // given
         User creator = users.get(0);
-        Set<User> receivers = new HashSet<User>();
-        receivers.add(users.get(1));
+        Set<Integer> receiversIds = new HashSet<Integer>();
+        receiversIds.add(users.get(1).getId());
         // when
-        boolean result = app.createMarios(creator, receivers, MariosType.MARIOS_T1, null);
+        boolean result = app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T1, null);
         // then
         Assertions.assertTrue(result);
     }
@@ -103,11 +99,11 @@ class AppTest {
     void createMariosCommentTooLong() {
         // given
         User creator = users.get(0);
-        Set<User> receivers = new HashSet<User>();
-        receivers.add(users.get(1));
-        String longComment =  new String(new char[app.maxCommentLength+1]).replace('\0', 'x');
+        Set<Integer> receiversIds = new HashSet<Integer>();
+        receiversIds.add(users.get(1).getId());
+        String longComment =  new String(new char[app.MAX_COMMENT_LENGTH +1]).replace('\0', 'x');
         // when
-        boolean result = app.createMarios(creator, receivers, MariosType.MARIOS_T1, longComment);
+        boolean result = app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T1, longComment);
         // then
         Assertions.assertFalse(result);
     }
@@ -116,52 +112,52 @@ class AppTest {
     void getMariosesCreatedByUser(){
         // given
         User creator = users.get(0);
-        Set<User> receivers = new HashSet<User>();
-        receivers.add(users.get(1));
-        app.createMarios(creator, receivers, MariosType.MARIOS_T1, shortComment);
-        app.createMarios(creator, receivers, MariosType.MARIOS_T2, shortComment);
-        app.createMarios(creator, receivers, MariosType.MARIOS_T3, shortComment);
+        Set<Integer> receiversIDs = new HashSet<Integer>();
+        receiversIDs.add(users.get(1).getId());
+        app.createMarios(creator.getId(), receiversIDs, MariosType.MARIOS_T1, SHORT_COMMENT);
+        app.createMarios(creator.getId(), receiversIDs, MariosType.MARIOS_T2, SHORT_COMMENT);
+        app.createMarios(creator.getId(), receiversIDs, MariosType.MARIOS_T3, SHORT_COMMENT);
         // when
-        List<Marios> marioses = app.getSortedMariosesCreatedByUser(creator);
+        List<Marios> marioses = app.getSortedMariosesCreatedByUser(creator.getId());
         // then
-        assertThat(marioses).filteredOn(m -> m.getCreator().equals(creator)).hasSize(3);
+        assertThat(marioses).filteredOn(m -> m.getCreatorId().equals(creator.getId())).hasSize(3);
     }
 
     @Test
     void getMariosesCreatedByUserEmpty(){
         // given
         User creator = users.get(0);
-        Set<User> receivers = new HashSet<User>();
+        Set<Integer> receiversIds = new HashSet<Integer>();
         User notCreator = users.get(1);
-        receivers.add(notCreator);
-        app.createMarios(creator, receivers, MariosType.MARIOS_T1, shortComment);
-        app.createMarios(creator, receivers, MariosType.MARIOS_T2, shortComment);
-        app.createMarios(creator, receivers, MariosType.MARIOS_T3, shortComment);
+        receiversIds.add(notCreator.getId());
+        app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T1, SHORT_COMMENT);
+        app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T2, SHORT_COMMENT);
+        app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T3, SHORT_COMMENT);
         // when
-        List<Marios> marioses = app.getSortedMariosesCreatedByUser(notCreator);
+        List<Marios> marioses = app.getSortedMariosesCreatedByUser(notCreator.getId());
         // then
-        assertThat(marioses).filteredOn(m -> m.getCreator().equals(notCreator)).hasSize(0);
+        assertThat(marioses).filteredOn(m -> m.getCreatorId().equals(notCreator.getId())).hasSize(0);
     }
 
     @Test
     void getSortedMarosesReceivedByUser(){
         // given
         User creator = users.get(0);
-        Set<User> receivers = new HashSet<User>();
+        Set<Integer> receiversIds = new HashSet<Integer>();
 
         User receiver = users.get(1);
-        receivers.add(receiver);
+        receiversIds.add(receiver.getId());
 
-        Set<User> otherReceivers = new HashSet<User>();
-        receivers.add(users.get(2));
+        Set<Integer> otherReceivers = new HashSet<Integer>();
+        receiversIds.add(users.get(2).getId());
 
-        app.createMarios(creator, receivers, MariosType.MARIOS_T1, shortComment);
-        app.createMarios(creator, receivers, MariosType.MARIOS_T2, shortComment);
-        app.createMarios(creator, otherReceivers, MariosType.MARIOS_T3, shortComment);
+        app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T1, SHORT_COMMENT);
+        app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T2, SHORT_COMMENT);
+        app.createMarios(creator.getId(), otherReceivers, MariosType.MARIOS_T3, SHORT_COMMENT);
         // when
-        List<Marios> marioses = app.getSortedMariosesReceivedByUser(receiver);
+        List<Marios> marioses = app.getSortedMariosesReceivedByUser(receiver.getId());
         // then
-        assertThat(marioses).filteredOn(m -> m.getReceivers().contains(receiver)).hasSize(2);
+        assertThat(marioses).filteredOn(m -> m.getReceiversIds().contains(receiver.getId())).hasSize(2);
     }
 
 

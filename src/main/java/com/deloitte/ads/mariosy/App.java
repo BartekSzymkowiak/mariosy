@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 public class App
 {
+    protected static final int MAX_COMMENT_LENGTH =256;
+
     public Set<User> getUsers() {
         return users;
     }
@@ -15,15 +17,12 @@ public class App
 
     protected Set<User> users;
 
+    protected Set<Marios> marioses;
+
     public App(Set<User> users) {
         this.users = users;
         this.marioses = new HashSet<Marios>();
     }
-
-    protected Set<Marios> marioses;
-
-    protected final int maxCommentLength=256;
-
 
     public boolean createUser(String firstName, String lastName){
         User user = new User(firstName, lastName);
@@ -31,25 +30,25 @@ public class App
         return true;
     }
 
-    public boolean createMarios(User creator, Set<User> receivers, MariosType type, String comment){
+    public boolean createMarios(Integer creatorId, Set<Integer> receiversIds, MariosType type, String comment){
 
-        if (Objects.isNull(creator)){
+        if (Objects.isNull(creatorId)){
             return false;
         }
-        else if (receivers.isEmpty()){
+        else if (receiversIds.isEmpty()){
             return false;
         }
-        else if (receivers.contains(creator)){
+        else if (receiversIds.contains(creatorId)){
             return false;
         }
         else if (!MariosType.checkIfTypeExists(type)){
             return false;
         }
-        else if (comment!=null && comment.length() > maxCommentLength){
+        else if (comment!=null && comment.length() > MAX_COMMENT_LENGTH){
             return false;
         }
         else{
-            Marios marios = new Marios(creator, receivers, type);
+            Marios marios = new Marios(creatorId, receiversIds, type);
             if (comment!=null && comment.length()>0 ){
                 marios.setComment(comment);
             }
@@ -58,17 +57,16 @@ public class App
         }
     }
 
-
-    public List<Marios> getSortedMariosesCreatedByUser(User creator){
+    public List<Marios> getSortedMariosesCreatedByUser(Integer creatorId){
         List<Marios> marioses;
-        marioses = this.marioses.stream().filter(m -> m.getCreator().equals(creator)).sorted(Comparator.comparing(Marios::getCreationDateTime)).collect(Collectors.toList());
+        marioses = this.marioses.stream().filter(m -> m.getCreatorId().equals(creatorId)).sorted(Comparator.comparing(Marios::getCreationDateTime)).collect(Collectors.toList());
         return marioses;
     }
 
 
-    public List<Marios> getSortedMariosesReceivedByUser(User receiver){
+    public List<Marios> getSortedMariosesReceivedByUser(Integer receiverId){
         List<Marios> marioses;
-        marioses = this.marioses.stream().filter(m -> m.getReceivers().contains(receiver)).sorted(Comparator.comparing(Marios::getCreationDateTime)).collect(Collectors.toList());
+        marioses = this.marioses.stream().filter(m -> m.getReceiversIds().contains(receiverId)).sorted(Comparator.comparing(Marios::getCreationDateTime)).collect(Collectors.toList());
         return marioses;
     }
 
