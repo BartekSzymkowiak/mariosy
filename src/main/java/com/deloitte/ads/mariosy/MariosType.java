@@ -1,11 +1,11 @@
 package com.deloitte.ads.mariosy;
 
 public enum MariosType {
-    T1,
-    T2,
-    T3,
-    T4,
-    T5;
+    MARIOS_T1,
+    MARIOS_T2,
+    MARIOS_T3,
+    MARIOS_T4,
+    MARIOS_T5;
 
     public static boolean checkIfTypeExists (MariosType value) {
         for (MariosType type : values()) {

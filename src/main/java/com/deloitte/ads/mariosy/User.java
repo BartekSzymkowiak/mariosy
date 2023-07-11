@@ -40,5 +40,8 @@ public class User {
 
     private String lastName;
 
-
+    @Override
+    public String toString() {
+        return String.format("First name: %s, Last name: %s, UUID: %s",this.firstName, this.lastName,this.id);
+    }
 }

@@ -74,4 +74,23 @@ public class Marios {
 
     private String comment;
 
+    @Override
+    public String toString() {
+        String start = "Marios\n";
+        String creator = this.creator.getFirstName() + " " + this.creator.getLastName();
+
+        StringBuilder sBuilder = new StringBuilder();
+        sBuilder.append(start).append(String.format("creator: %s",creator))
+                .append("\n")
+                .append(String.format("type: %s",this.type.toString()))
+                .append("\n")
+                .append(String.format("Comment: %s",this.comment))
+                .append("\nReceivers:\n");
+        String receiver;
+        for(User u : this.receivers){
+            sBuilder.append(String.format("\t %s %s",u.getFirstName(),u.getLastName()));
+        }
+
+        return sBuilder.toString();
+    }
 }
