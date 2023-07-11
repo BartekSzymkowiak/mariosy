@@ -1,4 +1,4 @@
-package com.deloitte.ads.mariosy;
+package com.deloitte.ads.mariosy.repository;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

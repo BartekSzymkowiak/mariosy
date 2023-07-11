@@ -1,5 +1,9 @@
 package com.deloitte.ads.mariosy;
 
+import com.deloitte.ads.mariosy.repository.Marios;
+import com.deloitte.ads.mariosy.repository.MariosType;
+import com.deloitte.ads.mariosy.repository.User;
+import com.deloitte.ads.mariosy.service.Mariosy;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,16 +15,20 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class AppTest {
+class MariosyTest {
 
-    private List<User> users = CompanyData.getEmployees();
+    protected static final int MAX_COMMENT_LENGTH =256;
+
     private static final String SHORT_COMMENT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
-    private App app;
+    private List<User> users = CompanyData.getEmployees();
+
+
+    private Mariosy app;
 
     @BeforeEach
     public void init(){
-        app = new App(new HashSet<User>(this.users));
+        app = new Mariosy(new HashSet<User>(this.users));
     }
 
     @Test
@@ -101,7 +109,7 @@ class AppTest {
         User creator = users.get(0);
         Set<Integer> receiversIds = new HashSet<Integer>();
         receiversIds.add(users.get(1).getId());
-        String longComment =  new String(new char[app.MAX_COMMENT_LENGTH +1]).replace('\0', 'x');
+        String longComment =  new String(new char[MAX_COMMENT_LENGTH +1]).replace('\0', 'x');
         // when
         boolean result = app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T1, longComment);
         // then

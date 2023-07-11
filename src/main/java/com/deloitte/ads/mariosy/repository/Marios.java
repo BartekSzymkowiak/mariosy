@@ -1,4 +1,4 @@
-package com.deloitte.ads.mariosy;
+package com.deloitte.ads.mariosy.repository;
 
 import java.time.LocalDateTime;
 import java.util.Set;

@@ -1,8 +1,9 @@
 package com.deloitte.ads.mariosy;
 
+import com.deloitte.ads.mariosy.repository.User;
+
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 public class CompanyData {
         private static final List<User> employees =   Arrays.asList(new User("John","Doe"),

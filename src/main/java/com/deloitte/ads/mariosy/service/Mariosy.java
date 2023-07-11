@@ -1,9 +1,15 @@
-package com.deloitte.ads.mariosy;
+package com.deloitte.ads.mariosy.service;
+
+import com.deloitte.ads.mariosy.repository.Marios;
+import com.deloitte.ads.mariosy.repository.MariosType;
+import com.deloitte.ads.mariosy.repository.User;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class App
+@Service
+public class Mariosy
 {
     protected static final int MAX_COMMENT_LENGTH =256;
 
@@ -19,7 +25,7 @@ public class App
 
     protected Set<Marios> marioses;
 
-    public App(Set<User> users) {
+    public Mariosy(Set<User> users) {
         this.users = users;
         this.marioses = new HashSet<Marios>();
     }
