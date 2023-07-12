@@ -1,5 +1,6 @@
 package com.deloitte.ads.mariosy.service;
 
+import com.deloitte.ads.mariosy.CompanyData;
 import com.deloitte.ads.mariosy.repository.Marios;
 import com.deloitte.ads.mariosy.repository.MariosType;
 import com.deloitte.ads.mariosy.repository.User;
@@ -30,28 +31,36 @@ public class Mariosy
         this.marioses = new HashSet<Marios>();
     }
 
-    public boolean createUser(String firstName, String lastName){
-        User user = new User(firstName, lastName);
-        this.users.add(user);
-        return true;
+    public Mariosy() {
+        this.users = new HashSet<User>(CompanyData.getEmployees());
+        this.marioses = new HashSet<Marios>();
     }
 
-    public boolean createMarios(Integer creatorId, Set<Integer> receiversIds, MariosType type, String comment){
+    public Integer createUser(String firstName, String lastName, String email){
+        if (this.users.stream().filter(u -> u.getEmail().equals(email)).count() > 0){
+            return -1;
+        }
+        User user = new User(firstName, lastName, email);
+        this.users.add(user);
+        return user.getId();
+    }
+
+    public Integer createMarios(Integer creatorId, Set<Integer> receiversIds, MariosType type, String comment){
 
         if (Objects.isNull(creatorId)){
-            return false;
+            return -1;
         }
         else if (receiversIds.isEmpty()){
-            return false;
+            return -1;
         }
         else if (receiversIds.contains(creatorId)){
-            return false;
+            return -1;
         }
         else if (!MariosType.checkIfTypeExists(type)){
-            return false;
+            return -1;
         }
         else if (comment!=null && comment.length() > MAX_COMMENT_LENGTH){
-            return false;
+            return -1;
         }
         else{
             Marios marios = new Marios(creatorId, receiversIds, type);
@@ -59,7 +68,7 @@ public class Mariosy
                 marios.setComment(comment);
             }
             this.marioses.add(marios);
-            return true;
+            return marios.getId();
         }
     }
 

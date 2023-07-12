@@ -4,24 +4,26 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class User {
 
-    public Integer getId() {
-        return id;
-    }
-
     private static AtomicInteger seq = new AtomicInteger();
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     private int id;
+    private String firstName;
+    private String lastName;
+    private String email;
 
-    public User(String firstName, String lastName) {
+    public User(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.id = seq.incrementAndGet();
+        this.email = email;
     }
 
-    private String firstName;
+    public Integer getId() {
+        return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -39,7 +41,13 @@ public class User {
         this.lastName = lastName;
     }
 
-    private String lastName;
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     @Override
     public String toString() {

@@ -23,7 +23,6 @@ class MariosyTest {
 
     private List<User> users = CompanyData.getEmployees();
 
-
     private Mariosy app;
 
     @BeforeEach
@@ -38,9 +37,9 @@ class MariosyTest {
         Set<Integer> receiversIds = new HashSet<Integer>();
         receiversIds.add(users.get(1).getId());
         // when
-        boolean result = app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T1, SHORT_COMMENT);
+        Integer returnedId = app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T1, SHORT_COMMENT);
         // then
-        Assertions.assertTrue(result);
+        Assertions.assertNotEquals(-1, returnedId);
     }
 
     @Test
@@ -51,9 +50,9 @@ class MariosyTest {
         receiversIds.add(users.get(1).getId());
         receiversIds.add(users.get(2).getId());
         // when
-        boolean result = app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T1, SHORT_COMMENT);
+        Integer returnedId = app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T1, SHORT_COMMENT);
         // then
-        Assertions.assertTrue(result);
+        Assertions.assertNotEquals(-1, returnedId);
     }
     @Test
     void createMariosCreatorIsReceiver() {
@@ -62,9 +61,9 @@ class MariosyTest {
         Set<Integer> receiversIds = new HashSet<Integer>();
         receiversIds.add(users.get(0).getId());
         // when
-        boolean result = app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T1, SHORT_COMMENT);
+        Integer returnedId = app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T1, SHORT_COMMENT);
         // then
-        Assertions.assertFalse(result);
+        Assertions.assertEquals(-1, returnedId);
     }
 
     @Test
@@ -72,12 +71,12 @@ class MariosyTest {
         // given
         User creator = users.get(0);
         Set<Integer> receivers = new HashSet<Integer>();
-        User receiver = new User(creator.getFirstName(), creator.getLastName());
+        User receiver = new User(creator.getFirstName(), creator.getLastName(),"other.email."+creator.getEmail());
         receivers.add(receiver.getId());
         // when
-        boolean result = app.createMarios(creator.getId(), receivers, MariosType.MARIOS_T1, SHORT_COMMENT);
+        Integer returnedId = app.createMarios(creator.getId(), receivers, MariosType.MARIOS_T1, SHORT_COMMENT);
         // then
-        Assertions.assertTrue(result);
+        Assertions.assertNotEquals(-1, returnedId);
     }
 
     @Test
@@ -86,9 +85,9 @@ class MariosyTest {
         User creator = users.get(0);
         Set<Integer> receivers = new HashSet<Integer>();
         // when
-        boolean result = app.createMarios(creator.getId(), receivers, MariosType.MARIOS_T1, SHORT_COMMENT);
+        Integer returnedId = app.createMarios(creator.getId(), receivers, MariosType.MARIOS_T1, SHORT_COMMENT);
         // then
-        Assertions.assertFalse(result);
+        Assertions.assertEquals(-1 ,returnedId);
     }
 
     @Test
@@ -98,9 +97,9 @@ class MariosyTest {
         Set<Integer> receiversIds = new HashSet<Integer>();
         receiversIds.add(users.get(1).getId());
         // when
-        boolean result = app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T1, null);
+        Integer returnedId = app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T1, null);
         // then
-        Assertions.assertTrue(result);
+        Assertions.assertNotEquals(-1 ,returnedId);
     }
 
     @Test
@@ -111,9 +110,9 @@ class MariosyTest {
         receiversIds.add(users.get(1).getId());
         String longComment =  new String(new char[MAX_COMMENT_LENGTH +1]).replace('\0', 'x');
         // when
-        boolean result = app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T1, longComment);
+        Integer returnedId = app.createMarios(creator.getId(), receiversIds, MariosType.MARIOS_T1, longComment);
         // then
-        Assertions.assertFalse(result);
+        Assertions.assertEquals(-1, returnedId);
     }
 
     @Test
@@ -148,7 +147,7 @@ class MariosyTest {
     }
 
     @Test
-    void getSortedMarosesReceivedByUser(){
+    void getSortedMariosesReceivedByUser(){
         // given
         User creator = users.get(0);
         Set<Integer> receiversIds = new HashSet<Integer>();
