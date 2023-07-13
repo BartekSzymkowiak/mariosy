@@ -1,4 +1,4 @@
-package com.deloitte.ads.mariosy.repository;
+package com.deloitte.ads.mariosy.entity;
 
 public enum MariosType {
     MARIOS_T1,

@@ -1,39 +1,34 @@
 package com.deloitte.ads.mariosy;
 
-import com.deloitte.ads.mariosy.repository.Marios;
-import com.deloitte.ads.mariosy.repository.MariosType;
-import com.deloitte.ads.mariosy.repository.User;
-import com.deloitte.ads.mariosy.service.Mariosy;
-import org.junit.jupiter.api.Assertions;
+import com.deloitte.ads.mariosy.entity.UserEntity;
+import com.deloitte.ads.mariosy.service.MariosyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class MariosyTest {
+class MariosyOldUnitTest {
 
     protected static final int MAX_COMMENT_LENGTH =256;
 
     private static final String SHORT_COMMENT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
-    private List<User> users;
+    private List<UserEntity> userEntities;
 
-    private Mariosy app;
+    private MariosyService app;
 
     @BeforeEach
     public void init(){
-        app = new Mariosy();
+        app = new MariosyService();
     }
 
 
     @Test
     public void addUser(){
-        app.createUser("John","Doe","jondoe@email.com");
+        //app.createUser("John","Doe","jondoe@email.com");
 
     }
 //

@@ -1,18 +1,17 @@
-package com.deloitte.ads.mariosy.controller;
+package com.deloitte.ads.mariosy;
 
-import com.deloitte.ads.mariosy.repository.Marios;
-import com.deloitte.ads.mariosy.repository.MariosType;
-import com.google.common.collect.Sets;
+import com.deloitte.ads.mariosy.DTO.UserDTO;
+import com.deloitte.ads.mariosy.controller.MariosController;
+import com.deloitte.ads.mariosy.controller.UserController;
+import com.deloitte.ads.mariosy.entity.UserEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
-import java.util.Set;
+import org.springframework.http.ResponseEntity;
 
 @SpringBootTest
-public class MariosTest {
+public class MariosOldIntegrationTest {
 
     private static final String SHORT_COMMENT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
@@ -21,6 +20,20 @@ public class MariosTest {
 
     @Autowired
     private UserController userController;
+
+    @Test
+    public void addAndSearchUserByEmail() {
+        String email = "johndoe@email.com";
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setEmail(email);
+        userDTO.setFirstName("John");
+        userDTO.setLastName("Doe");
+        userController.addUser(userDTO);
+
+        ResponseEntity<UserDTO> responseUser = userController.getUserByEmail(email);
+        Assertions.assertEquals(200, responseUser.getStatusCodeValue());
+    }
 
 //    @Test
 //    public void checkCreatedMarios(){

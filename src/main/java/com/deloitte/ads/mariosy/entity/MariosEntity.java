@@ -1,12 +1,11 @@
-package com.deloitte.ads.mariosy.repository;
+package com.deloitte.ads.mariosy.entity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Entity()
-public class Marios {
+public class MariosEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,20 +25,21 @@ public class Marios {
             name = "marios_receiver",
             joinColumns = @JoinColumn(name = "marios_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> receivers;
+    private Set<UserEntity> receivers;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ref_creator_id")
-    private User creator;
+    private UserEntity creator;
 
-    public Marios(){
+    public MariosEntity(){
     }
 
-    public Marios(int creatorId, Set<Integer> receiversIds, MariosType type) {
-        // TODO
+    public MariosEntity(UserEntity creator, Set<UserEntity> receivers, MariosType type, String comment) {
+        this.creator = creator;
+        this.receivers = receivers;
         this.type = type;
+        this.comment = comment;
         this.creationDateTime = LocalDateTime.now();
-        this.comment = "";
     }
 
     public Long getId() {
@@ -58,14 +58,6 @@ public class Marios {
         this.creationDateTime = creationDateTime;
     }
 
-    public MariosType getType() {
-        return type;
-    }
-
-    public void setType(MariosType type) {
-        this.type = type;
-    }
-
     public String getComment() {
         return comment;
     }
@@ -74,5 +66,28 @@ public class Marios {
         this.comment = comment;
     }
 
+    public MariosType getType() {
+        return type;
+    }
+
+    public void setType(MariosType type) {
+        this.type = type;
+    }
+
+    public Set<UserEntity> getReceivers() {
+        return receivers;
+    }
+
+    public void setReceivers(Set<UserEntity> receivers) {
+        this.receivers = receivers;
+    }
+
+    public UserEntity getCreator() {
+        return creator;
+    }
+
+    public void setCreator(UserEntity creator) {
+        this.creator = creator;
+    }
 
 }

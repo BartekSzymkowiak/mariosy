@@ -1,14 +1,10 @@
-package com.deloitte.ads.mariosy.repository;
-
-import org.springframework.context.annotation.Conditional;
+package com.deloitte.ads.mariosy.entity;
 
 import javax.persistence.*;
-import java.beans.ConstructorProperties;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Entity(name = "user_account")
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,21 +15,21 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @ManyToMany(mappedBy = "receivers")
-    private Set<Marios> received_marioses;
+    private Set<MariosEntity> received_marioses;
 
     @OneToMany(
             mappedBy = "creator",
             cascade = {CascadeType.ALL})
-    private Set<Marios> created_marioses;
+    private Set<MariosEntity> created_marioses;
 
-    public User(){
+    public UserEntity(){
     }
 
-    public User(String firstName, String lastName, String email) {
+    public UserEntity(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -70,12 +66,20 @@ public class User {
         this.email = email;
     }
 
-    public Set<Marios> getReceived_marioses() {
+    public Set<MariosEntity> getReceived_marioses() {
         return received_marioses;
     }
 
-    public void setReceived_marioses(Set<Marios> received_marioses) {
+    public void setReceived_marioses(Set<MariosEntity> received_marioses) {
         this.received_marioses = received_marioses;
+    }
+
+    public Set<MariosEntity> getCreated_marioses() {
+        return created_marioses;
+    }
+
+    public void setCreated_marioses(Set<MariosEntity> created_marioses) {
+        this.created_marioses = created_marioses;
     }
 
     @Override
