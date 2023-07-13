@@ -1,27 +1,48 @@
 package com.deloitte.ads.mariosy.repository;
 
+import org.springframework.context.annotation.Conditional;
+
+import javax.persistence.*;
+import java.beans.ConstructorProperties;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Entity(name = "user_account")
 public class User {
 
-    private static AtomicInteger seq = new AtomicInteger();
-
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @Column(name = "first_name")
     private String firstName;
+
+    @Column(name = "last_name")
     private String lastName;
+
+    @Column(name = "email")
     private String email;
+
+    @ManyToMany(mappedBy = "receivers")
+    private Set<Marios> received_marioses;
+
+    @OneToMany(
+            mappedBy = "creator",
+            cascade = {CascadeType.ALL})
+    private Set<Marios> created_marioses;
+
+    public User(){
+    }
 
     public User(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.id = seq.incrementAndGet();
         this.email = email;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -49,8 +70,21 @@ public class User {
         this.email = email;
     }
 
+    public Set<Marios> getReceived_marioses() {
+        return received_marioses;
+    }
+
+    public void setReceived_marioses(Set<Marios> received_marioses) {
+        this.received_marioses = received_marioses;
+    }
+
     @Override
     public String toString() {
-        return String.format("First name: %s, Last name: %s, UUID: %s",this.firstName, this.lastName,this.id);
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

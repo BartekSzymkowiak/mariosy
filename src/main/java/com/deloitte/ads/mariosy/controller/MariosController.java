@@ -20,17 +20,16 @@ public class MariosController {
     private Mariosy mariosy;
 
     @PostMapping
-    public ResponseEntity<Object> createMarios(@RequestBody MariosDTO mariosDTO){
-         Integer mariosId =  mariosy.createMarios(mariosDTO.getCreatorId(),
-                 mariosDTO.getReceiversIds(),
-                 mariosDTO.getType(),
-                 mariosDTO.getComment());
-         if (mariosId >= 0){
-             Map<String, Object> object = new HashMap<>();
-             object.put("id", mariosId);
-             return new ResponseEntity<>(object, HttpStatus.CREATED);
+    public ResponseEntity createMarios(@RequestBody MariosDTO mariosDTO){
+        try{
+            mariosy.createMarios(mariosDTO.getCreatorId(),
+                    mariosDTO.getReceiversIds(),
+                    mariosDTO.getType(),
+                    mariosDTO.getComment());
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping
@@ -38,15 +37,15 @@ public class MariosController {
         return mariosy.getMarioses();
     }
 
-    @GetMapping("/user/{userId}/created")
-    public List<Marios> getSortedMariosesCreatedByUser(@PathVariable Integer userId){
-        return mariosy.getSortedMariosesCreatedByUser(userId);
-    }
-
-    @GetMapping("/user/{userId}/received")
-    public List<Marios> getSortedMariosesReceivedByUser(@PathVariable Integer userId){
-        return mariosy.getSortedMariosesReceivedByUser(userId);
-    }
+//    @GetMapping("/user/{userId}/created")
+//    public List<Marios> getSortedMariosesCreatedByUser(@PathVariable Integer userId){
+//        return mariosy.getSortedMariosesCreatedByUser(userId);
+//    }
+//
+//    @GetMapping("/user/{userId}/received")
+//    public List<Marios> getSortedMariosesReceivedByUser(@PathVariable Integer userId){
+//        return mariosy.getSortedMariosesReceivedByUser(userId);
+//    }
 
 
 }

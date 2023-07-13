@@ -1,42 +1,53 @@
 package com.deloitte.ads.mariosy.repository;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Entity()
 public class Marios {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @Column(name = "creation_date_time")
+    private LocalDateTime creationDateTime;
+
+    @Column(name = "comment")
+    private String comment;
+
+    @Column(name = "type")
+    private MariosType type;
+
+    @ManyToMany
+    @JoinTable(
+            name = "marios_receiver",
+            joinColumns = @JoinColumn(name = "marios_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> receivers;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ref_creator_id")
+    private User creator;
+
+    public Marios(){
+    }
+
     public Marios(int creatorId, Set<Integer> receiversIds, MariosType type) {
-        this.creatorId = creatorId;
-        this.receiversIds = receiversIds;
+        // TODO
         this.type = type;
         this.creationDateTime = LocalDateTime.now();
-        this.id = seq.incrementAndGet();
         this.comment = "";
     }
-    private static AtomicInteger seq = new AtomicInteger();
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
-    }
-
-    public Integer getCreatorId() {
-        return creatorId;
-    }
-
-    public void setCreatorId(int creatorId) {
-        this.creatorId = creatorId;
-    }
-
-    public Set<Integer> getReceiversIds() {
-        return receiversIds;
-    }
-
-    public void setReceiversIds(Set<Integer> receiversIds) {
-        this.receiversIds = receiversIds;
     }
 
     public LocalDateTime getCreationDateTime() {
@@ -47,13 +58,6 @@ public class Marios {
         this.creationDateTime = creationDateTime;
     }
 
-    private Integer id;
-    private Integer creatorId;
-
-    private Set<Integer> receiversIds;
-
-    private LocalDateTime creationDateTime;
-
     public MariosType getType() {
         return type;
     }
@@ -61,8 +65,6 @@ public class Marios {
     public void setType(MariosType type) {
         this.type = type;
     }
-
-    private MariosType type;
 
     public String getComment() {
         return comment;
@@ -72,6 +74,5 @@ public class Marios {
         this.comment = comment;
     }
 
-    private String comment;
 
 }

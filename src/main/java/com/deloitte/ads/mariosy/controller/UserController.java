@@ -22,17 +22,14 @@ public class UserController {
         return mariosy.getUsers();
     }
 
-    @PostMapping()
-    public ResponseEntity<Object> addUser(@RequestBody UserDTO userDTO){
-        Integer userId = mariosy.createUser(userDTO.getFirstName(),userDTO.getLastName(), userDTO.getLastName());
-
-        if (userId >= 0){
-            Map<String, Object> object = new HashMap<>();
-            object.put("id", userId);
-            return new ResponseEntity<>(object, HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-    }
+//    @PostMapping()
+//    public ResponseEntity addUser(@RequestBody UserDTO userDTO){
+//        try {
+//            mariosy.createUser(userDTO.getFirstName(),userDTO.getLastName(), userDTO.getLastName());
+//            return new ResponseEntity<>(HttpStatus.CREATED);
+//        }catch (Exception e){
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
 }

@@ -1,89 +1,90 @@
 package com.deloitte.ads.mariosy.service;
 
-import com.deloitte.ads.mariosy.CompanyData;
-import com.deloitte.ads.mariosy.repository.Marios;
-import com.deloitte.ads.mariosy.repository.MariosType;
-import com.deloitte.ads.mariosy.repository.User;
+import com.deloitte.ads.mariosy.repository.*;
+import com.google.common.collect.Sets;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class Mariosy
 {
     protected static final int MAX_COMMENT_LENGTH =256;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private MariosRepository mariosRepository;
+
+    public Mariosy() {
+    }
+
     public Set<User> getUsers() {
-        return users;
+        return Sets.newHashSet(userRepository.findAll());
     }
 
     public Set<Marios> getMarioses() {
-        return marioses;
+        return Sets.newHashSet(mariosRepository.findAll());
     }
 
-    protected Set<User> users;
-
-    protected Set<Marios> marioses;
-
-    public Mariosy(Set<User> users) {
-        this.users = users;
-        this.marioses = new HashSet<Marios>();
-    }
-
-    public Mariosy() {
-        this.users = new HashSet<User>(CompanyData.getEmployees());
-        this.marioses = new HashSet<Marios>();
-    }
-
-    public Integer createUser(String firstName, String lastName, String email){
-        if (this.users.stream().filter(u -> u.getEmail().equals(email)).count() > 0){
-            return -1;
+    public void createUser(String firstName, String lastName, String email){
+        Optional <User> userWithThisEmail = userRepository.findByEmail(email);
+        if (userWithThisEmail.isPresent()){
+           throw new IllegalArgumentException("User with this email already exists");
         }
         User user = new User(firstName, lastName, email);
-        this.users.add(user);
-        return user.getId();
+        userRepository.save(user);
     }
 
-    public Integer createMarios(Integer creatorId, Set<Integer> receiversIds, MariosType type, String comment){
+    public void createMarios(Integer creatorId, Set<Integer> receiversIds, MariosType type, String comment){
 
         if (Objects.isNull(creatorId)){
-            return -1;
+            throw new IllegalArgumentException("creatorId is null");
         }
         else if (receiversIds.isEmpty()){
-            return -1;
+            throw new IllegalArgumentException("receiversIds is empty");
         }
         else if (receiversIds.contains(creatorId)){
-            return -1;
+            throw new IllegalArgumentException("receiversIds contains creatorId");
         }
         else if (!MariosType.checkIfTypeExists(type)){
-            return -1;
+            throw new IllegalArgumentException("MariosType does not exists");
         }
         else if (comment!=null && comment.length() > MAX_COMMENT_LENGTH){
-            return -1;
+            throw new IllegalArgumentException("Comment is too long");
         }
         else{
             Marios marios = new Marios(creatorId, receiversIds, type);
             if (comment!=null && comment.length()>0 ){
                 marios.setComment(comment);
             }
-            this.marioses.add(marios);
-            return marios.getId();
+            mariosRepository.save(marios);
         }
     }
 
-    public List<Marios> getSortedMariosesCreatedByUser(Integer creatorId){
-        List<Marios> marioses;
-        marioses = this.marioses.stream().filter(m -> m.getCreatorId().equals(creatorId)).sorted(Comparator.comparing(Marios::getCreationDateTime)).collect(Collectors.toList());
+    public Set<Marios> getMariosesCreatedByUser(Integer creatorId){
+        Set<Marios> marioses;
+        marioses = mariosRepository.findByCreatorId(creatorId);
         return marioses;
     }
 
 
-    public List<Marios> getSortedMariosesReceivedByUser(Integer receiverId){
-        List<Marios> marioses;
-        marioses = this.marioses.stream().filter(m -> m.getReceiversIds().contains(receiverId)).sorted(Comparator.comparing(Marios::getCreationDateTime)).collect(Collectors.toList());
-        return marioses;
-    }
+//    public Set<Marios> getMariosesReceivedByUser(Integer receiverId){
+//        Set<Marios> marioses;
+//        marioses =
+//        return marioses;
+//    }
+
+
+//
+//    // TODO remove this
+//    List<User> employees =   Arrays.asList(new User("John","Doe", "john.d@email.com"),
+//            new User("Johny","Doe","johny.d@email.com"),
+//            new User("Johan","Doe","johan.d@email.com"),
+//            new User("Jan","Doe","jan.d@email.com"));
+//        userRepository.saveAll(employees);
 
 
 }
