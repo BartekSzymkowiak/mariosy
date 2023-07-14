@@ -16,21 +16,14 @@ public class UserControllerTest {
     @Test
     public void shouldFindCreatedUserByEmail() {
         // given
-        UserDTO userDTO = createExampleUserDTO();
+        UserDTO userDTO = ControllerTestHelper.createExampleUserDTO();
         String email = userDTO.getEmail();
         // when
         userController.addUser(userDTO);
         ResponseEntity<UserDTO> responseUser = userController.getUserByEmail(email);
+        UserDTO responseUserDTO = responseUser.getBody();
         // then
-        Assertions.assertEquals(200, responseUser.getStatusCodeValue());
-    }
-
-    private UserDTO createExampleUserDTO(){
-        UserDTO userDTO = new UserDTO();
-        userDTO.setEmail("john.doe@email.com");
-        userDTO.setFirstName("John");
-        userDTO.setLastName("Doe");
-        return userDTO;
+        Assertions.assertEquals(email, responseUserDTO.getEmail());
     }
 
 }

@@ -1,4 +1,4 @@
-package com.deloitte.ads.mariosy;
+package com.deloitte.ads.mariosy.oldTests;
 
 import com.deloitte.ads.mariosy.DTO.UserDTO;
 import com.deloitte.ads.mariosy.controller.MariosController;
@@ -21,19 +21,19 @@ public class MariosOldIntegrationTest {
     @Autowired
     private UserController userController;
 
-    @Test
-    public void addAndSearchUserByEmail() {
-        String email = "johndoe@email.com";
-
-        UserDTO userDTO = new UserDTO();
-        userDTO.setEmail(email);
-        userDTO.setFirstName("John");
-        userDTO.setLastName("Doe");
-        userController.addUser(userDTO);
-
-        ResponseEntity<UserDTO> responseUser = userController.getUserByEmail(email);
-        Assertions.assertEquals(200, responseUser.getStatusCodeValue());
-    }
+//    @Test
+//    public void addAndSearchUserByEmail() {
+//        String email = "johndoe@email.com";
+//
+//        UserDTO userDTO = new UserDTO();
+//        userDTO.setEmail(email);
+//        userDTO.setFirstName("John");
+//        userDTO.setLastName("Doe");
+//        userController.addUser(userDTO);
+//
+//        ResponseEntity<UserDTO> responseUser = userController.getUserByEmail(email);
+//        Assertions.assertEquals(200, responseUser.getStatusCodeValue());
+//    }
 
 //    @Test
 //    public void checkCreatedMarios(){

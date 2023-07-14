@@ -1,4 +1,4 @@
-package com.deloitte.ads.mariosy;
+package com.deloitte.ads.mariosy.oldTests;
 
 import com.deloitte.ads.mariosy.entity.UserEntity;
 import com.deloitte.ads.mariosy.service.MariosyService;
@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class MariosyOldUnitTest {
 
-    protected static final int MAX_COMMENT_LENGTH =256;
+    protected static final int MAX_COMMENT_LENGTH = 500;
 
     private static final String SHORT_COMMENT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
@@ -26,11 +26,11 @@ class MariosyOldUnitTest {
     }
 
 
-    @Test
-    public void addUser(){
-        //app.createUser("John","Doe","jondoe@email.com");
-
-    }
+//    @Test
+//    public void addUser(){
+//        //app.createUser("John","Doe","jondoe@email.com");
+//
+//    }
 //
 //    @Test
 //    void createMariosOneReceiver() {
@@ -168,7 +168,5 @@ class MariosyOldUnitTest {
 //        // then
 //        assertThat(marioses).filteredOn(m -> m.getReceiversIds().contains(receiver.getId())).hasSize(2);
 //    }
-
-
 
 }
