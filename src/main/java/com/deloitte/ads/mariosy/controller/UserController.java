@@ -4,6 +4,7 @@ import com.deloitte.ads.mariosy.DTO.UserDTO;
 import com.deloitte.ads.mariosy.entity.UserEntity;
 import com.deloitte.ads.mariosy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,23 @@ public class UserController {
     @GetMapping("/users")
     public Set<UserDTO> getAllUsers() {
         return userService.getAllUsers().stream().map(UserDTO::mapUserEntityToUserDTO).collect(Collectors.toSet());
+    }
+
+    @GetMapping(value = "/users", params = "searchKeyword")
+    public Set<UserDTO> searchUsers (@RequestParam("searchKeyword") String searchKeyword) {
+        return userService.searchUsers(searchKeyword).stream().map(UserDTO::mapUserEntityToUserDTO).collect(Collectors.toSet());
+    }
+
+    @GetMapping(value = "/users", params = "email")
+    public ResponseEntity<UserDTO> getUserByEmail(@RequestParam String email)
+    {
+        Optional<UserEntity> user =  userService.getUserByEmail(email);
+        if (user.isPresent()){
+            return new ResponseEntity<>(UserDTO.mapUserEntityToUserDTO(user.get()), HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/users/{id}")
@@ -45,17 +63,5 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/users", params = "email")
-    public ResponseEntity<UserDTO> getUserByEmail(@RequestParam String email)
-    {
-        Optional<UserEntity> user =  userService.getUserByEmail(email);
-        if (user.isPresent()){
-            return new ResponseEntity<>(UserDTO.mapUserEntityToUserDTO(user.get()), HttpStatus.OK);
-        }
-        else{
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
-
-    }
 
 }

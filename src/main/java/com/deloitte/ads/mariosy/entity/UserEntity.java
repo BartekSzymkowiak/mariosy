@@ -11,16 +11,12 @@ public class UserEntity {
     private Long id;
     @Column(name = "first_name")
     private String firstName;
-
     @Column(name = "last_name")
     private String lastName;
-
     @Column(name = "email", unique = true)
     private String email;
-
     @ManyToMany(mappedBy = "receivers")
     private Set<MariosEntity> received_marioses;
-
     @OneToMany(
             mappedBy = "creator",
             cascade = {CascadeType.ALL})
@@ -70,16 +66,8 @@ public class UserEntity {
         return received_marioses;
     }
 
-    public void setReceived_marioses(Set<MariosEntity> received_marioses) {
-        this.received_marioses = received_marioses;
-    }
-
     public Set<MariosEntity> getCreated_marioses() {
         return created_marioses;
-    }
-
-    public void setCreated_marioses(Set<MariosEntity> created_marioses) {
-        this.created_marioses = created_marioses;
     }
 
     @Override

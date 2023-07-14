@@ -13,6 +13,8 @@ public interface MariosRepository extends CrudRepository<MariosEntity,Long> {
 
     Set<MariosEntity> findMariosEntitiesByCreator_Id(Long id);
 
+    @Query("SELECT marios FROM MariosEntity marios")
+    Set<MariosEntity> search();
 }
 
 

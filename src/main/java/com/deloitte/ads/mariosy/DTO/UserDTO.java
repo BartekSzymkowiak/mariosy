@@ -5,7 +5,6 @@ import com.deloitte.ads.mariosy.entity.UserEntity;
 
 public class UserDTO {
 
-
     private Long id;
     private String firstName;
     private String lastName;

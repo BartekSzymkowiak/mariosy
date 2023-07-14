@@ -48,4 +48,8 @@ public class UserService {
     }
 
 
+    public Set<UserEntity> searchUsers(String searchKeyword){
+     return userRepository.searchUserEntities(searchKeyword);
+    }
+
 }

@@ -12,11 +12,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+
 @Service
 public class MariosyService
 {
-    protected static final int MAX_COMMENT_LENGTH =256;
-
     @Autowired
     private UserRepository userRepository;
 
@@ -30,7 +29,7 @@ public class MariosyService
         return Sets.newHashSet(mariosRepository.findAll());
     }
 
-    public void createMarios(MariosDTO mariosDTO) throws MariosCreationFailedException {
+    public void createMarios(MariosDTO mariosDTO) throws IllegalMariosFieldValueException {
 
         Long creatorId = mariosDTO.getCreatorId();
         Set<Long> receiversIds = mariosDTO.getReceiversIds();
@@ -38,32 +37,32 @@ public class MariosyService
         String comment = mariosDTO.getComment();
 
         if (Objects.isNull(creatorId)){
-            throw new MariosCreationFailedException("creatorId is null");
+            throw new IllegalMariosFieldValueException("creatorId is null");
         }
         else if (receiversIds.isEmpty()){
-            throw new MariosCreationFailedException("receiversIds is empty");
+            throw new IllegalMariosFieldValueException("receiversIds is empty");
         }
         else if (receiversIds.contains(creatorId)){
-            throw new MariosCreationFailedException("receiversIds contains creatorId");
+            throw new IllegalMariosFieldValueException("receiversIds contains creatorId");
         }
         else if (!MariosType.checkIfTypeExists(mariosType)){
-            throw new MariosCreationFailedException("MariosType does not exists");
+            throw new IllegalMariosFieldValueException("MariosType does not exists");
         }
         else if (StringUtils.isBlank(comment)){
-            throw new MariosCreationFailedException("Comment is blank");
+            throw new IllegalMariosFieldValueException("Comment is blank");
         }
-        else if(comment.length() > MAX_COMMENT_LENGTH){
-            throw new MariosCreationFailedException("Comment is too long");
+        else if(comment.length() > MariosEntity.MAX_COMMENT_LENGTH){
+            throw new IllegalMariosFieldValueException("Comment is too long");
         }
         else{
             Optional<UserEntity> optionalCreator = userRepository.findUserById(creatorId);
             Set<UserEntity> receivers = userRepository.findUsersByIdIn(receiversIds);
 
             if (optionalCreator.isEmpty()){
-                throw new MariosCreationFailedException("Creator does not exists");
+                throw new IllegalMariosFieldValueException("Creator does not exists");
             }
             if (receivers.isEmpty() || receivers.size()!=receiversIds.size()){
-                throw new MariosCreationFailedException("Receivers are not correct");
+                throw new IllegalMariosFieldValueException("Receivers are not correct");
             }
             MariosEntity mariosEntity = new MariosEntity(mariosType, comment);
             mariosEntity.setCreator(optionalCreator.get());

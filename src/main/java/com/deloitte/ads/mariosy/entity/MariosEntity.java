@@ -1,20 +1,24 @@
 package com.deloitte.ads.mariosy.entity;
 
+import org.checkerframework.checker.units.qual.Length;
+
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Set;
 
 @Entity()
 public class MariosEntity {
 
+    public static final int MAX_COMMENT_LENGTH = 500;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "creation_date_time")
-    private LocalDateTime creationDateTime;
+    @Column(name = "creation_timestamp")
+    private Instant creationInstant;
 
-    @Column(name = "comment")
+    @Column(name = "comment", length = MAX_COMMENT_LENGTH)
     private String comment;
 
     @Column(name = "type")
@@ -37,23 +41,19 @@ public class MariosEntity {
     public MariosEntity(MariosType type, String comment) {
         this.type = type;
         this.comment = comment;
-        this.creationDateTime = LocalDateTime.now();
+        this.creationInstant = Instant.now();
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Instant getCreationInstant() {
+        return creationInstant;
     }
 
-    public LocalDateTime getCreationDateTime() {
-        return creationDateTime;
-    }
-
-    public void setCreationDateTime(LocalDateTime creationDateTime) {
-        this.creationDateTime = creationDateTime;
+    public void setCreationInstant(Instant creationInstant) {
+        this.creationInstant = creationInstant;
     }
 
     public String getComment() {

@@ -3,6 +3,7 @@ package com.deloitte.ads.mariosy.DTO;
 import com.deloitte.ads.mariosy.entity.MariosEntity;
 import com.deloitte.ads.mariosy.entity.MariosType;
 
+import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,7 @@ public class MariosDTO {
     private Set<Long> receiversIds;
     private String comment;
     private MariosType type;
+    private Instant creationInstant;
 
     public Long getId() {
         return id;
@@ -54,6 +56,13 @@ public class MariosDTO {
         this.type = type;
     }
 
+    public Instant getCreationInstant() {
+        return creationInstant;
+    }
+    public void setCreationInstant(Instant creationInstant) {
+        this.creationInstant = creationInstant;
+    }
+
     public static MariosDTO mapMariosEntityToMariosDTO(MariosEntity mariosEntity){
         MariosDTO mariosDTO = new MariosDTO();
         mariosDTO.setId(mariosEntity.getId());
@@ -61,6 +70,7 @@ public class MariosDTO {
         mariosDTO.setReceiversIds(mariosEntity.getReceivers().stream().map(r -> r.getId()).collect(Collectors.toSet()));
         mariosDTO.setComment(mariosEntity.getComment());
         mariosDTO.setType(mariosEntity.getType());
+        mariosDTO.setCreationInstant(mariosEntity.getCreationInstant());
         return mariosDTO;
     }
 

@@ -2,6 +2,7 @@ package com.deloitte.ads.mariosy.controller;
 
 import com.deloitte.ads.mariosy.DTO.MariosDTO;
 import com.deloitte.ads.mariosy.entity.MariosEntity;
+import com.deloitte.ads.mariosy.service.IllegalMariosFieldValueException;
 import com.deloitte.ads.mariosy.service.MariosyService;
 import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +38,15 @@ public class MariosController {
     }
 
     @PostMapping("/marioses")
-    public ResponseEntity createMarios(@RequestBody @NotNull MariosDTO mariosDTO){
+    public ResponseEntity<String> createMarios(@RequestBody @NotNull MariosDTO mariosDTO){
         try{
             mariosyService.createMarios(mariosDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch(IllegalMariosFieldValueException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
