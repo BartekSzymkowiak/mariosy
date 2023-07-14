@@ -34,9 +34,7 @@ public class MariosEntity {
     public MariosEntity(){
     }
 
-    public MariosEntity(UserEntity creator, Set<UserEntity> receivers, MariosType type, String comment) {
-        this.creator = creator;
-        this.receivers = receivers;
+    public MariosEntity(MariosType type, String comment) {
         this.type = type;
         this.comment = comment;
         this.creationDateTime = LocalDateTime.now();
@@ -80,6 +78,9 @@ public class MariosEntity {
 
     public void setReceivers(Set<UserEntity> receivers) {
         this.receivers = receivers;
+        for(UserEntity userEntity : receivers){
+            userEntity.getCreated_marioses().add(this);
+        }
     }
 
     public UserEntity getCreator() {
@@ -88,6 +89,7 @@ public class MariosEntity {
 
     public void setCreator(UserEntity creator) {
         this.creator = creator;
+        creator.getCreated_marioses().add(this);
     }
 
 }

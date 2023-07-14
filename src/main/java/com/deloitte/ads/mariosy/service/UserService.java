@@ -2,7 +2,6 @@ package com.deloitte.ads.mariosy.service;
 
 import com.deloitte.ads.mariosy.DTO.UserDTO;
 import com.deloitte.ads.mariosy.entity.UserEntity;
-import com.deloitte.ads.mariosy.repository.MariosRepository;
 import com.deloitte.ads.mariosy.repository.UserRepository;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ public class UserService {
     public UserService() {
     }
 
-    public Set<UserEntity> getUsers() {
+    public Set<UserEntity> getAllUsers() {
         return Sets.newHashSet(userRepository.findAll());
     }
 
@@ -40,7 +39,11 @@ public class UserService {
         userRepository.save(userEntity);
     }
 
-    public Optional<UserEntity> findUserByEmail(String email){
+    public Optional<UserEntity> getUserById(Long id){
+        return userRepository.findUserById(id);
+    }
+
+    public Optional<UserEntity> getUserByEmail(String email){
         return userRepository.findUserByEmail(email);
     }
 

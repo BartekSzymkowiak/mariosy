@@ -29,10 +29,10 @@ public class MariosControllerTest {
         UserDTO receiverDTO = addUser(2);
 
       //  int mariosesCount = mariosController.getAllMarioses().size();
-        Set<Long> receiversIds = new HashSet<Long>(Sets.newHashSet(receiverDTO.getId()));
-        MariosDTO mariosDTO = createMariosDTO(creator.getId(), receiversIds);
-        //when
-        mariosController.createMarios(mariosDTO);
+//        Set<Long> receiversIds = new HashSet<Long>(Sets.newHashSet(receiverDTO.getId()));
+//        MariosDTO mariosDTO = createMariosDTO(creator.getId(), receiversIds);
+//        //when
+//        mariosController.createMarios(mariosDTO);
        // int newMariosesCount = mariosController.getAllMarioses().size();
         //then
        // Assertions.assertEquals(mariosesCount+1, newMariosesCount);

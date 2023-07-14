@@ -13,17 +13,29 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/users/")
+@RequestMapping("/api/v1")
 public class UserController {
+
     @Autowired
     private UserService userService;
 
-    @GetMapping()
+    @GetMapping("/users")
     public Set<UserDTO> getAllUsers() {
-        return userService.getUsers().stream().map(UserDTO::mapUserEntityToUserDTO).collect(Collectors.toSet());
+        return userService.getAllUsers().stream().map(UserDTO::mapUserEntityToUserDTO).collect(Collectors.toSet());
     }
 
-    @PostMapping()
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+        Optional<UserEntity> userEntityOptional = userService.getUserById(id);
+        if (userEntityOptional.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else{
+            UserDTO userDTO = UserDTO.mapUserEntityToUserDTO(userEntityOptional.get());
+            return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        }
+    }
+
+    @PostMapping("/users")
     public ResponseEntity addUser(@RequestBody UserDTO userDTO){
         try {
             userService.createUser(userDTO);
@@ -33,10 +45,10 @@ public class UserController {
         }
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<UserDTO> getUserByEmail(@RequestParam String email )
+    @GetMapping(value = "/users", params = "email")
+    public ResponseEntity<UserDTO> getUserByEmail(@RequestParam String email)
     {
-        Optional<UserEntity> user =  userService.findUserByEmail(email);
+        Optional<UserEntity> user =  userService.getUserByEmail(email);
         if (user.isPresent()){
             return new ResponseEntity<>(UserDTO.mapUserEntityToUserDTO(user.get()), HttpStatus.OK);
         }

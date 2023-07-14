@@ -1,7 +1,6 @@
 package com.deloitte.ads.mariosy.service;
 
 import com.deloitte.ads.mariosy.DTO.MariosDTO;
-import com.deloitte.ads.mariosy.DTO.UserDTO;
 import com.deloitte.ads.mariosy.entity.MariosEntity;
 import com.deloitte.ads.mariosy.entity.MariosType;
 import com.deloitte.ads.mariosy.entity.UserEntity;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class MariosyService
@@ -67,14 +65,16 @@ public class MariosyService
             if (receivers.isEmpty() || receivers.size()!=receiversIds.size()){
                 throw new MariosCreationFailedException("Receivers are not correct");
             }
-            MariosEntity mariosEntity = new MariosEntity(optionalCreator.get(), receivers, mariosType, comment);
+            MariosEntity mariosEntity = new MariosEntity(mariosType, comment);
+            mariosEntity.setCreator(optionalCreator.get());
+            mariosEntity.setReceivers(receivers);
             mariosRepository.save(mariosEntity);
         }
     }
 
     public Set<MariosEntity> getMariosesCreatedByUser(Long creatorId){
         Set<MariosEntity> marioses;
-        marioses = Sets.newHashSet(mariosRepository.findMariosEntitiesByCreatorId(creatorId));
+        marioses = Sets.newHashSet(mariosRepository.findMariosEntitiesByCreator_Id(creatorId));
         return marioses;
     }
 
@@ -86,6 +86,10 @@ public class MariosyService
         }
         Set<MariosEntity> marioses = userEntity.get().getReceived_marioses();
         return marioses;
+    }
+
+    public Optional<MariosEntity> getMariosById(Long id){
+        return mariosRepository.findById(id);
     }
 
 

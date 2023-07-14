@@ -11,10 +11,7 @@ import java.util.Set;
 @Repository
 public interface MariosRepository extends CrudRepository<MariosEntity,Long> {
 
-    @Query("select marios from MariosEntity marios where marios.creator.id =:id")
-    Set<MariosEntity> findMariosEntitiesByCreatorId(@Param("id") Long id);
-
-
+    Set<MariosEntity> findMariosEntitiesByCreator_Id(Long id);
 
 }
 

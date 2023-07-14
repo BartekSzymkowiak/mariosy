@@ -9,18 +9,34 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/marioses/")
+@RequestMapping("/api/v1")
 public class MariosController {
 
     @Autowired
     private MariosyService mariosyService;
 
-    @PostMapping
+    @GetMapping("/marioses")
+    public Set<MariosDTO> getAllMarioses(){
+        return mariosyService.getMarioses().stream().map(MariosDTO::mapMariosEntityToMariosDTO).collect(Collectors.toSet());
+    }
+
+    @GetMapping("/marioses/{id}")
+    public ResponseEntity<MariosDTO> getMariosById(@PathVariable("id") Long mariosId){
+        Optional<MariosEntity> mariosEntityOptional = mariosyService.getMariosById(mariosId);
+        if(mariosEntityOptional.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else{
+            MariosDTO mariosDTO = MariosDTO.mapMariosEntityToMariosDTO(mariosEntityOptional.get());
+            return new ResponseEntity<>(mariosDTO, HttpStatus.OK);
+        }
+    }
+
+    @PostMapping("/marioses")
     public ResponseEntity createMarios(@RequestBody @NotNull MariosDTO mariosDTO){
         try{
             mariosyService.createMarios(mariosDTO);
@@ -30,18 +46,12 @@ public class MariosController {
         }
     }
 
-    @GetMapping
-    public Set<MariosDTO> getAllMarioses(){
-        return mariosyService.getMarioses().stream().map(MariosDTO::mapMariosEntityToMariosDTO).collect(Collectors.toSet());
-    }
-
-    @GetMapping("/user/{userId}/created")
+    @GetMapping("/users/{userId}/marioses/created")
     public Set<MariosDTO> getMariosesCreatedByUser(@PathVariable("userId") Long userId){
         return mariosyService.getMariosesCreatedByUser(userId).stream().map(MariosDTO::mapMariosEntityToMariosDTO).collect(Collectors.toSet());
     }
 
-
-    @GetMapping("/user/{userId}/received")
+    @GetMapping("/users/{userId}/marioses/received")
     public Set<MariosDTO> getSortedMariosesReceivedByUser(@PathVariable Long userId){
         return mariosyService.getMariosesReceivedByUser(userId).stream().map(MariosDTO::mapMariosEntityToMariosDTO).collect(Collectors.toSet());
     }
