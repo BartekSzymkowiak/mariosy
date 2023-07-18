@@ -17,13 +17,14 @@ import java.util.*;
 @Service
 public class MariosyService
 {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final MariosRepository mariosRepository;
 
     @Autowired
-    private MariosRepository mariosRepository;
-
-    public MariosyService() {
+    public MariosyService(UserRepository userRepository, MariosRepository mariosRepository) {
+        this.userRepository = userRepository;
+        this.mariosRepository = mariosRepository;
     }
 
     public Set<MariosEntity> getMarioses() {

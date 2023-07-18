@@ -17,9 +17,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1")
 public class MariosController {
+    private MariosyService mariosyService;
 
     @Autowired
-    private MariosyService mariosyService;
+    public MariosController(MariosyService mariosyService) {
+        this.mariosyService = mariosyService;
+    }
 
     @GetMapping("/marioses")
     public Set<MariosDTO> getAllMarioses(){

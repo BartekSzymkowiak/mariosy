@@ -17,9 +17,10 @@ public interface UserRepository extends CrudRepository<UserEntity,Long> {
 
     Optional <UserEntity> findUserById(Long id);
 
-    @Query("SELECT u FROM user_account u WHERE u.firstName LIKE %?1%"
-            + " OR u.lastName LIKE %?1%"
-            + " OR u.email LIKE %?1%"
+    @Query("SELECT u FROM user_account u WHERE "
+            + " lower(u.firstName) LIKE lower(concat('%', ?1,'%'))"
+            + " OR lower(u.lastName) LIKE lower(concat('%', ?1,'%'))"
+            + " OR lower(u.email) LIKE lower(concat('%', ?1,'%'))"
             )
     Set<UserEntity> searchUserEntities(String searchKeyword);
 }

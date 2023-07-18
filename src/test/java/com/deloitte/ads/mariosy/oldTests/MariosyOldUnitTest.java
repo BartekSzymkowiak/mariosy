@@ -20,10 +20,10 @@ class MariosyOldUnitTest {
 
     private MariosyService app;
 
-    @BeforeEach
-    public void init(){
-        app = new MariosyService();
-    }
+//    @BeforeEach
+//    public void init(){
+//        app = new MariosyService();
+//    }
 
 
 //    @Test

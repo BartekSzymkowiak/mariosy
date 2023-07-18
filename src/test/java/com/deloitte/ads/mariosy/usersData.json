@@ -1,0 +1,26 @@
+[
+    {
+      "firstName": "Joe",
+      "lastName": "Doe",
+      "email": "joe.doe@email.com",
+      "wrongEmail" : "joeXdoe@email.com"
+    },
+    {
+    "firstName": "John",
+    "lastName": "Doe",
+    "email" : "john.doe@email.com",
+      "wrongEmail": "doe.john@email.com"
+    },
+    {
+    "firstName": "Jack",
+    "lastName" : "Donut",
+    "email": "fastcar123@email.com",
+      "wrongEmail" : "fastcar123emailcom"
+    },
+    {
+      "firstName": "Bob",
+      "lastName": "Burgerson",
+      "email": "abc@abc.eu",
+      "wrongEmail": "@"
+    }
+]

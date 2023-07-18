@@ -1,0 +1,39 @@
+[
+  {
+    "marioses": [
+      {
+        "comment": "Lorem ipsum",
+        "type": 1
+      },
+      {
+        "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sodales commodo porta. Integer commodo nisi eget mi porta, sit amet tempor lacus molestie.",
+        "type": 3
+      }
+    ],
+    "users": [
+      {
+        "firstName": "Joe",
+        "lastName": "Doe",
+        "email": "joe.doe@email.com"
+      },
+      {
+        "firstName": "John",
+        "lastName": "Doe",
+        "email" : "john.doe@email.com"
+      },
+      {
+        "firstName": "Jack",
+        "lastName" : "Donut",
+        "email": "fastcar123@email.com"
+      },
+      {
+        "firstName": "Bob",
+        "lastName": "Burgerson",
+        "email": "abc@abc.eu"
+      }
+    ]
+  }
+
+
+]
+
