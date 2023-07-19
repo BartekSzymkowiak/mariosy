@@ -1,7 +1,6 @@
 package com.deloitte.ads.mariosy.controller;
 
 import com.deloitte.ads.mariosy.DTO.MariosDTO;
-import com.deloitte.ads.mariosy.entity.MariosEntity;
 import com.deloitte.ads.mariosy.service.IllegalMariosFieldValueException;
 import com.deloitte.ads.mariosy.service.MariosyService;
 import com.sun.istack.NotNull;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -27,17 +25,16 @@ public class MariosController {
 
     @GetMapping("/marioses")
     public Set<MariosDTO> getAllMarioses(){
-        return mariosyService.getMarioses().stream().map(MariosDTO::mapMariosEntityToMariosDTO).collect(Collectors.toSet());
+        return mariosyService.getMariosesDTOs();
     }
 
     @GetMapping("/marioses/{mariosExternalId}")
     public ResponseEntity<MariosDTO> getMariosById(@PathVariable("mariosExternalId") UUID mariosExternalId){
-        Optional<MariosEntity> mariosEntityOptional = mariosyService.getMariosByExternalId(mariosExternalId);
-        if(mariosEntityOptional.isEmpty()){
+        Optional<MariosDTO> mariosDTOOptional = mariosyService.getMariosDTOByExternalId(mariosExternalId);
+        if(mariosDTOOptional.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }else{
-            MariosDTO mariosDTO = MariosDTO.mapMariosEntityToMariosDTO(mariosEntityOptional.get());
-            return new ResponseEntity<>(mariosDTO, HttpStatus.OK);
+            return new ResponseEntity<>(mariosDTOOptional.get(), HttpStatus.OK);
         }
     }
 
@@ -56,13 +53,12 @@ public class MariosController {
 
     @GetMapping("/users/{userExternalId}/marioses/created")
     public Set<MariosDTO> getMariosesCreatedByUser(@PathVariable("userExternalId") UUID userExternalId){
-        return mariosyService.getMariosesCreatedByUser(userExternalId).stream().map(MariosDTO::mapMariosEntityToMariosDTO).collect(Collectors.toSet());
+        return mariosyService.getMariosesDTOsCreatedByUser(userExternalId);
     }
 
     @GetMapping("/users/{userExternalId}/marioses/received")
     public Set<MariosDTO> getSortedMariosesReceivedByUser(@PathVariable UUID userExternalId){
-        return mariosyService.getMariosesReceivedByUser(userExternalId).stream().map(MariosDTO::mapMariosEntityToMariosDTO).collect(Collectors.toSet());
+        return mariosyService.getMariosesDTOsReceivedByUser(userExternalId);
     }
-
 
 }

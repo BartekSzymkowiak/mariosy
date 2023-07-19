@@ -1,7 +1,5 @@
 package com.deloitte.ads.mariosy.entity;
 
-import org.checkerframework.checker.units.qual.Length;
-
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.Set;

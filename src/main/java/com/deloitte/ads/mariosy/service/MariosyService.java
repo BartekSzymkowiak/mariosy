@@ -4,14 +4,19 @@ import com.deloitte.ads.mariosy.DTO.MariosDTO;
 import com.deloitte.ads.mariosy.entity.MariosEntity;
 import com.deloitte.ads.mariosy.entity.MariosType;
 import com.deloitte.ads.mariosy.entity.UserEntity;
-import com.deloitte.ads.mariosy.repository.*;
+import com.deloitte.ads.mariosy.mappers.MariosMapper;
+import com.deloitte.ads.mariosy.repository.MariosRepository;
+import com.deloitte.ads.mariosy.repository.UserRepository;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -21,16 +26,22 @@ public class MariosyService
 
     private final MariosRepository mariosRepository;
 
+    private final MariosMapper mariosMapper;
+
     @Autowired
-    public MariosyService(UserRepository userRepository, MariosRepository mariosRepository) {
+    public MariosyService(UserRepository userRepository, MariosRepository mariosRepository, MariosMapper mariosMapper) {
         this.userRepository = userRepository;
         this.mariosRepository = mariosRepository;
+        this.mariosMapper = mariosMapper;
     }
 
     public Set<MariosEntity> getMarioses() {
         return Sets.newHashSet(mariosRepository.findAll());
     }
 
+    public Set<MariosDTO> getMariosesDTOs() {
+        return Sets.newHashSet(mariosRepository.findAll()).stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toSet());
+    }
 
     public void createMarios(MariosDTO mariosDTO) throws IllegalMariosFieldValueException {
 
@@ -80,6 +91,10 @@ public class MariosyService
         return marioses;
     }
 
+    public Set<MariosDTO> getMariosesDTOsCreatedByUser(UUID creatorExternalId){
+        return Sets.newHashSet(mariosRepository.findMariosEntitiesByCreator_ExternalId(creatorExternalId)).stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toSet());
+    }
+
     public Set<MariosEntity> getMariosesReceivedByUser(UUID receiverExternalId){
 
         Optional<UserEntity> userEntity = userRepository.findUserByExternalId(receiverExternalId);
@@ -90,11 +105,25 @@ public class MariosyService
         return marioses;
     }
 
+    public Set<MariosDTO> getMariosesDTOsReceivedByUser(UUID receiverExternalId){
+
+        Optional<UserEntity> userEntity = userRepository.findUserByExternalId(receiverExternalId);
+        if (userEntity.isEmpty()){
+            throw new IllegalArgumentException("User does not exists");
+        }
+        Set<MariosEntity> marioses = userEntity.get().getReceived_marioses();
+        return marioses.stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toSet());
+    }
+
     public Optional<MariosEntity> getMariosById(Long id){
         return mariosRepository.findById(id);
     }
 
     public Optional<MariosEntity> getMariosByExternalId(UUID externalId) {return mariosRepository.findMariosEntityByExternalId(externalId);}
+
+    public Optional<MariosDTO> getMariosDTOByExternalId(UUID externalId) {
+        return mariosMapper.optionalMariosEntityToOptionalMariosDTO(mariosRepository.findMariosEntityByExternalId(externalId));
+    }
 
 
 }
