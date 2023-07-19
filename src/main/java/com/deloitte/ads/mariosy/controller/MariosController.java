@@ -39,15 +39,15 @@ public class MariosController {
     }
 
     @PostMapping("/marioses")
-    public ResponseEntity<String> createMarios(@RequestBody @NotNull MariosDTO mariosDTO){
+    public ResponseEntity<MariosDTO> createMarios(@RequestBody @NotNull MariosDTO mariosDTO){
         try{
-            mariosyService.createMarios(mariosDTO);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+             MariosDTO returnMariosDTO = mariosyService.createMarios(mariosDTO);
+            return new ResponseEntity<MariosDTO>(returnMariosDTO, HttpStatus.CREATED);
         }catch(IllegalMariosFieldValueException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<MariosDTO>(HttpStatus.BAD_REQUEST);
         }
         catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<MariosDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

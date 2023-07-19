@@ -2,6 +2,7 @@ package com.deloitte.ads.mariosy.controller;
 
 import com.deloitte.ads.mariosy.DTO.UserDTO;
 import com.deloitte.ads.mariosy.service.UserService;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,10 +56,10 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity addUser(@RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> addUser(@RequestBody UserDTO userDTO){
         try {
-            userService.createUser(userDTO);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+             UserDTO responseUserDTO = userService.createUser(userDTO);
+            return new ResponseEntity<UserDTO>(responseUserDTO, HttpStatus.CREATED);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

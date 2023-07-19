@@ -43,7 +43,7 @@ public class MariosyService
         return Sets.newHashSet(mariosRepository.findAll()).stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toSet());
     }
 
-    public void createMarios(MariosDTO mariosDTO) throws IllegalMariosFieldValueException {
+    public MariosDTO createMarios(MariosDTO mariosDTO) throws IllegalMariosFieldValueException {
 
         UUID creatorExternalId = mariosDTO.getCreatorExternalId();
         Set<UUID> receiversExternalIds = mariosDTO.getReceiversExternalIds();
@@ -82,6 +82,7 @@ public class MariosyService
             mariosEntity.setCreator(optionalCreator.get());
             mariosEntity.setReceivers(receivers);
             mariosRepository.save(mariosEntity);
+            return mariosMapper.mariosEntityToMariosDTO(mariosEntity);
         }
     }
 

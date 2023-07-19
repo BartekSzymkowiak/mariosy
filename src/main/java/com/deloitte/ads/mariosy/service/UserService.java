@@ -34,7 +34,7 @@ public class UserService {
         return Sets.newHashSet(userRepository.findAll()).stream().map(u -> userMapper.userEntityToUserDTO(u)).collect(Collectors.toSet());
     }
 
-    public void createUser(UserDTO userDTO){
+    public UserDTO createUser(UserDTO userDTO){
 
         String firstName = userDTO.getFirstName();
         String lastName = userDTO.getLastName();
@@ -48,6 +48,7 @@ public class UserService {
         }
         UserEntity userEntity = new UserEntity(firstName, lastName, email);
         userRepository.save(userEntity);
+        return userMapper.userEntityToUserDTO(userEntity);
     }
 
     public Optional<UserEntity> getUserById(Long id){
