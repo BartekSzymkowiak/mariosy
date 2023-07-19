@@ -34,18 +34,18 @@ public class MariosyService
 
     public void createMarios(MariosDTO mariosDTO) throws IllegalMariosFieldValueException {
 
-        Long creatorId = mariosDTO.getCreatorId();
-        Set<Long> receiversIds = mariosDTO.getReceiversIds();
+        UUID creatorExternalId = mariosDTO.getCreatorExternalId();
+        Set<UUID> receiversExternalIds = mariosDTO.getReceiversExternalIds();
         MariosType mariosType = mariosDTO.getType();
         String comment = mariosDTO.getComment();
 
-        if (Objects.isNull(creatorId)){
+        if (Objects.isNull(creatorExternalId)){
             throw new IllegalMariosFieldValueException("creatorId is null");
         }
-        else if (receiversIds.isEmpty()){
+        else if (receiversExternalIds.isEmpty()){
             throw new IllegalMariosFieldValueException("receiversIds is empty");
         }
-        else if (receiversIds.contains(creatorId)){
+        else if (receiversExternalIds.contains(creatorExternalId)){
             throw new IllegalMariosFieldValueException("receiversIds contains creatorId");
         }
         else if (!MariosType.checkIfTypeExists(mariosType)){
@@ -58,13 +58,13 @@ public class MariosyService
             throw new IllegalMariosFieldValueException("Comment is too long");
         }
         else{
-            Optional<UserEntity> optionalCreator = userRepository.findUserById(creatorId);
-            Set<UserEntity> receivers = userRepository.findUsersByIdIn(receiversIds);
+            Optional<UserEntity> optionalCreator = userRepository.findUserByExternalId(creatorExternalId);
+            Set<UserEntity> receivers = userRepository.findUsersByExternalIdIn(receiversExternalIds);
 
             if (optionalCreator.isEmpty()){
                 throw new IllegalMariosFieldValueException("Creator does not exists");
             }
-            if (receivers.isEmpty() || receivers.size()!=receiversIds.size()){
+            if (receivers.isEmpty() || receivers.size()!=receiversExternalIds.size()){
                 throw new IllegalMariosFieldValueException("Receivers are not correct");
             }
             MariosEntity mariosEntity = new MariosEntity(mariosType, comment);
@@ -74,15 +74,15 @@ public class MariosyService
         }
     }
 
-    public Set<MariosEntity> getMariosesCreatedByUser(Long creatorId){
+    public Set<MariosEntity> getMariosesCreatedByUser(UUID creatorExternalId){
         Set<MariosEntity> marioses;
-        marioses = Sets.newHashSet(mariosRepository.findMariosEntitiesByCreator_Id(creatorId));
+        marioses = Sets.newHashSet(mariosRepository.findMariosEntitiesByCreator_ExternalId(creatorExternalId));
         return marioses;
     }
 
-    public Set<MariosEntity> getMariosesReceivedByUser(Long receiverId){
+    public Set<MariosEntity> getMariosesReceivedByUser(UUID receiverExternalId){
 
-        Optional<UserEntity> userEntity = userRepository.findUserById(receiverId);
+        Optional<UserEntity> userEntity = userRepository.findUserByExternalId(receiverExternalId);
         if (userEntity.isEmpty()){
             throw new IllegalArgumentException("User does not exists");
         }
@@ -93,6 +93,8 @@ public class MariosyService
     public Optional<MariosEntity> getMariosById(Long id){
         return mariosRepository.findById(id);
     }
+
+    public Optional<MariosEntity> getMariosByExternalId(UUID externalId) {return mariosRepository.findMariosEntityByExternalId(externalId);}
 
 
 }

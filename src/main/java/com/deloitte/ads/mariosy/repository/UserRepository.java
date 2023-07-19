@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @Repository
 public interface UserRepository extends CrudRepository<UserEntity,Long> {
@@ -16,6 +17,10 @@ public interface UserRepository extends CrudRepository<UserEntity,Long> {
     Set<UserEntity> findUsersByIdIn(Set<Long> ids);
 
     Optional <UserEntity> findUserById(Long id);
+
+    Optional <UserEntity> findUserByExternalId(UUID externalId);
+
+    Set<UserEntity> findUsersByExternalIdIn(Set<UUID> externalIds);
 
     @Query("SELECT u FROM user_account u WHERE "
             + " lower(u.firstName) LIKE lower(concat('%', ?1,'%'))"

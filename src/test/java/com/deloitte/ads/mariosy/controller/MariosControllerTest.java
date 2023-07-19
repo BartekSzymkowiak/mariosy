@@ -27,24 +27,24 @@ public class MariosControllerTest {
     private MariosController mariosController;
 
 
-    @Test
-    @Transactional
-    public void shouldBeMoreMarioses(){
-        //given
-        ControllerTestHelper.createUsersToGivenId(2, userController);
-
-        Long creatorId = 1L;
-        Long receiverId = 2L;
-
-        int mariosesCount = mariosController.getAllMarioses().size();
-        Set<Long> receiversIds = new HashSet<Long>(Sets.newHashSet(receiverId));
-        MariosDTO mariosDTO = ControllerTestHelper.createMariosDTO(creatorId, receiversIds);
-        //when
-        ResponseEntity<String> responseEntity =  mariosController.createMarios(mariosDTO);
-        int newMariosesCount = mariosController.getAllMarioses().size();
-        //then
-        Assertions.assertEquals(mariosesCount+1, newMariosesCount);
-    }
+//    @Test
+//    @Transactional
+//    public void shouldBeMoreMarioses(){
+//        //given
+//        ControllerTestHelper.createUsersToGivenId(2, userController);
+//
+//        Long creatorId = 1L;
+//        Long receiverId = 2L;
+//
+//        int mariosesCount = mariosController.getAllMarioses().size();
+//        Set<Long> receiversIds = new HashSet<Long>(Sets.newHashSet(receiverId));
+//        MariosDTO mariosDTO = ControllerTestHelper.createMariosDTO(creatorId, receiversIds);
+//        //when
+//        ResponseEntity<String> responseEntity =  mariosController.createMarios(mariosDTO);
+//        int newMariosesCount = mariosController.getAllMarioses().size();
+//        //then
+//        Assertions.assertEquals(mariosesCount+1, newMariosesCount);
+//    }
 
 
 

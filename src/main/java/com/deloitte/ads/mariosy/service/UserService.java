@@ -4,11 +4,13 @@ import com.deloitte.ads.mariosy.DTO.UserDTO;
 import com.deloitte.ads.mariosy.entity.UserEntity;
 import com.deloitte.ads.mariosy.repository.UserRepository;
 import com.google.common.collect.Sets;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -43,6 +45,8 @@ public class UserService {
     public Optional<UserEntity> getUserById(Long id){
         return userRepository.findUserById(id);
     }
+
+    public Optional<UserEntity> getUserByExternalId(UUID externalId) { return userRepository.findUserByExternalId(externalId); }
 
     public Optional<UserEntity> getUserByEmail(String email){
         return userRepository.findUserByEmail(email);

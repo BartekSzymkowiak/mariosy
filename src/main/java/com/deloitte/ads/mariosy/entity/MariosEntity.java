@@ -5,6 +5,7 @@ import org.checkerframework.checker.units.qual.Length;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity()
 public class MariosEntity {
@@ -14,6 +15,9 @@ public class MariosEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(name = "external_id", unique = true)
+    private UUID externalId;
 
     @Column(name = "creation_timestamp")
     private Instant creationInstant;
@@ -36,16 +40,22 @@ public class MariosEntity {
     private UserEntity creator;
 
     public MariosEntity(){
+        this.externalId = UUID.randomUUID();
     }
 
     public MariosEntity(MariosType type, String comment) {
         this.type = type;
         this.comment = comment;
         this.creationInstant = Instant.now();
+        this.externalId = UUID.randomUUID();
     }
 
     public Long getId() {
         return id;
+    }
+
+    public UUID getExternalId() {
+        return externalId;
     }
 
     public Instant getCreationInstant() {

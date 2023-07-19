@@ -3,7 +3,6 @@ package com.deloitte.ads.mariosy.controller;
 import com.deloitte.ads.mariosy.DTO.UserDTO;
 import com.deloitte.ads.mariosy.entity.UserEntity;
 import com.deloitte.ads.mariosy.service.UserService;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -46,9 +46,9 @@ public class UserController {
         }
     }
 
-    @GetMapping("/users/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        Optional<UserEntity> userEntityOptional = userService.getUserById(id);
+    @GetMapping("/users/{userExternalId}")
+    public ResponseEntity<UserDTO> getUserByExternalId(@PathVariable UUID userExternalId) {
+        Optional<UserEntity> userEntityOptional = userService.getUserByExternalId(userExternalId);
         if (userEntityOptional.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }else{

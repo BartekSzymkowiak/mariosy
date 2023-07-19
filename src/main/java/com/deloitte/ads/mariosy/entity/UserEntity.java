@@ -2,6 +2,7 @@ package com.deloitte.ads.mariosy.entity;
 
 import javax.persistence.*;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity(name = "user_account")
 public class UserEntity {
@@ -9,6 +10,10 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(name = "external_id", unique = true)
+    private UUID externalId;
+
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
@@ -23,16 +28,21 @@ public class UserEntity {
     private Set<MariosEntity> created_marioses;
 
     public UserEntity(){
+        this.externalId = UUID.randomUUID();
     }
 
     public UserEntity(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.externalId = UUID.randomUUID();
     }
 
     public Long getId() {
         return id;
+    }
+    public UUID getExternalId() {
+        return externalId;
     }
     public void setId(Long id) {
         this.id = id;

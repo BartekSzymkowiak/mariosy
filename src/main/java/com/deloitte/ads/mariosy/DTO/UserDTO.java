@@ -3,19 +3,22 @@ package com.deloitte.ads.mariosy.DTO;
 
 import com.deloitte.ads.mariosy.entity.UserEntity;
 
+import java.util.UUID;
+
 public class UserDTO {
 
-    private Long id;
+
+    private UUID externalId;
     private String firstName;
     private String lastName;
     private String email;
 
-    public Long getId() {
-        return id;
+    public UUID getExternalId() {
+        return externalId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setExternalId(UUID externalId) {
+        this.externalId = externalId;
     }
 
     public String getFirstName() {
@@ -44,7 +47,7 @@ public class UserDTO {
 
     public static UserDTO mapUserEntityToUserDTO(UserEntity userEntity){
         UserDTO userDTO = new UserDTO();
-        userDTO.setId(userEntity.getId());
+        userDTO.setExternalId(userEntity.getExternalId());
         userDTO.setEmail(userEntity.getEmail());
         userDTO.setFirstName(userEntity.getFirstName());
         userDTO.setLastName(userEntity.getLastName());

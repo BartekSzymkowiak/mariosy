@@ -3,11 +3,11 @@ package com.deloitte.ads.mariosy.controller;
 import com.deloitte.ads.mariosy.DTO.MariosDTO;
 import com.deloitte.ads.mariosy.DTO.UserDTO;
 import com.deloitte.ads.mariosy.entity.MariosType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Set;
+import java.util.UUID;
 
 public class ControllerTestHelper {
 
@@ -27,27 +27,27 @@ public class ControllerTestHelper {
         return userDTO;
     }
 
-    public static MariosDTO createMariosDTO(Long creatorId, Set<Long> receiversId){
+    public static MariosDTO createMariosDTO(UUID creatorExternalId, Set<UUID> receiversExternalId){
         MariosDTO mariosDTO = new MariosDTO();
-        mariosDTO.setCreatorId(creatorId);
-        mariosDTO.setReceiversIds(receiversId);
+        mariosDTO.setCreatorExternalId(creatorExternalId);
+        mariosDTO.setReceiversExternalIds(receiversExternalId);
         mariosDTO.setType(MariosType.MARIOS_T1);
         mariosDTO.setComment("Lorem ipsum");
         return mariosDTO;
     }
+//
+//    public static void createUsersToGivenId(Integer lastUserId, UserController userController){
+//        for(int i=1; i<=lastUserId; i++){
+//            addUser(lastUserId, userController);
+//        }
+//    }
 
-    public static void createUsersToGivenId(Integer lastUserId, UserController userController){
-        for(int i=1; i<=lastUserId; i++){
-            addUser(lastUserId, userController);
-        }
-    }
-
-    private static void addUser(Integer lastUserId, UserController userController){
-        ResponseEntity<UserDTO> responseEntityCheckUserExists = userController.getUserById(lastUserId.longValue());
-        if (responseEntityCheckUserExists.getStatusCode().equals(HttpStatus.NOT_FOUND)){
-            UserDTO userDTO= createUserDTO(lastUserId);
-            userController.addUser(userDTO);
-        }
-    }
+//    private static void addUser(Integer lastUserId, UserController userController){
+//        ResponseEntity<UserDTO> responseEntityCheckUserExists = userController.getUserByExternalId(lastUserId.longValue());
+//        if (responseEntityCheckUserExists.getStatusCode().equals(HttpStatus.NOT_FOUND)){
+//            UserDTO userDTO= createUserDTO(lastUserId);
+//            userController.addUser(userDTO);
+//        }
+//    }
 
 }
