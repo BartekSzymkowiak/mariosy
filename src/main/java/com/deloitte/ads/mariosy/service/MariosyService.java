@@ -7,15 +7,13 @@ import com.deloitte.ads.mariosy.entity.UserEntity;
 import com.deloitte.ads.mariosy.mappers.MariosMapper;
 import com.deloitte.ads.mariosy.repository.MariosRepository;
 import com.deloitte.ads.mariosy.repository.UserRepository;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -39,8 +37,8 @@ public class MariosyService
         return Sets.newHashSet(mariosRepository.findAll());
     }
 
-    public Set<MariosDTO> getMariosesDTOs() {
-        return Sets.newHashSet(mariosRepository.findAll()).stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toSet());
+    public List<MariosDTO> getMariosesDTOs() {
+        return ImmutableList.copyOf( mariosRepository.findAll()).stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toList());
     }
 
     public MariosDTO createMarios(MariosDTO mariosDTO) throws IllegalMariosFieldValueException {
@@ -60,17 +58,17 @@ public class MariosyService
             throw new IllegalMariosFieldValueException("receiversIds contains creatorId");
         }
         else if (!MariosType.checkIfTypeExists(mariosType)){
-            throw new IllegalMariosFieldValueException("MariosType does not exists");
+            throw new IllegalMariosFieldValueException("mariosType does not exists");
         }
         else if (StringUtils.isBlank(comment)){
-            throw new IllegalMariosFieldValueException("Comment is blank");
+            throw new IllegalMariosFieldValueException("comment is blank");
         }
         else if(comment.length() > MariosEntity.MAX_COMMENT_LENGTH){
-            throw new IllegalMariosFieldValueException("Comment is too long");
+            throw new IllegalMariosFieldValueException("comment is too long");
         }
         else{
             Optional<UserEntity> optionalCreator = userRepository.findUserByExternalId(creatorExternalId);
-            Set<UserEntity> receivers = userRepository.findUsersByExternalIdIn(receiversExternalIds);
+            List<UserEntity> receivers = userRepository.findUsersByExternalIdIn(receiversExternalIds);
 
             if (optionalCreator.isEmpty()){
                 throw new IllegalMariosFieldValueException("Creator does not exists");
@@ -80,7 +78,7 @@ public class MariosyService
             }
             MariosEntity mariosEntity = new MariosEntity(mariosType, comment);
             mariosEntity.setCreator(optionalCreator.get());
-            mariosEntity.setReceivers(receivers);
+            mariosEntity.setReceivers(Sets.newHashSet(receivers));
             mariosRepository.save(mariosEntity);
             return mariosMapper.mariosEntityToMariosDTO(mariosEntity);
         }
@@ -92,8 +90,8 @@ public class MariosyService
         return marioses;
     }
 
-    public Set<MariosDTO> getMariosesDTOsCreatedByUser(UUID creatorExternalId){
-        return Sets.newHashSet(mariosRepository.findMariosEntitiesByCreator_ExternalId(creatorExternalId)).stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toSet());
+    public List<MariosDTO> getMariosesDTOsCreatedByUser(UUID creatorExternalId){
+        return ImmutableList.copyOf(mariosRepository.findMariosEntitiesByCreator_ExternalId(creatorExternalId)).stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toList());
     }
 
     public Set<MariosEntity> getMariosesReceivedByUser(UUID receiverExternalId){
@@ -106,14 +104,14 @@ public class MariosyService
         return marioses;
     }
 
-    public Set<MariosDTO> getMariosesDTOsReceivedByUser(UUID receiverExternalId){
+    public List<MariosDTO> getMariosesDTOsReceivedByUser(UUID receiverExternalId){
 
         Optional<UserEntity> userEntity = userRepository.findUserByExternalId(receiverExternalId);
         if (userEntity.isEmpty()){
             throw new IllegalArgumentException("User does not exists");
         }
         Set<MariosEntity> marioses = userEntity.get().getReceived_marioses();
-        return marioses.stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toSet());
+        return marioses.stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toList());
     }
 
     public Optional<MariosEntity> getMariosById(Long id){

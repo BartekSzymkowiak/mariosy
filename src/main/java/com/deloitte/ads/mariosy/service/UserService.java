@@ -4,12 +4,13 @@ import com.deloitte.ads.mariosy.DTO.UserDTO;
 import com.deloitte.ads.mariosy.entity.UserEntity;
 import com.deloitte.ads.mariosy.mappers.UserMapper;
 import com.deloitte.ads.mariosy.repository.UserRepository;
-import com.google.common.collect.Sets;
+import com.google.common.collect.ImmutableList;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -26,25 +27,38 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public Set<UserEntity> getAllUsers() {
-        return Sets.newHashSet(userRepository.findAll());
+    public List<UserEntity> getAllUsers() {
+        return ImmutableList.copyOf(userRepository.findAll());
     }
 
-    public Set<UserDTO> getAllUsersDTOs() {
-        return Sets.newHashSet(userRepository.findAll()).stream().map(u -> userMapper.userEntityToUserDTO(u)).collect(Collectors.toSet());
+    public List<UserDTO> getAllUsersDTOs() {
+        return ImmutableList.copyOf(userRepository.findAll()).stream().map(u -> userMapper.userEntityToUserDTO(u)).collect(Collectors.toList());
     }
 
-    public UserDTO createUser(UserDTO userDTO){
+    public UserDTO createUser(UserDTO userDTO) throws IllegalUserFieldValueException{
 
         String firstName = userDTO.getFirstName();
         String lastName = userDTO.getLastName();
         String email = userDTO.getEmail();
 
+        if (StringUtils.isBlank(email)){
+            throw new IllegalUserFieldValueException("email is blank");
+        }
+        else if(!userMapper.isEmailValid(email)){
+            throw new IllegalUserFieldValueException("email is not valid");
+        }
+        else if (StringUtils.isBlank(firstName)){
+            throw new IllegalUserFieldValueException("firstName is blank");
+        }
+        else if (StringUtils.isBlank(lastName)){
+            throw new IllegalUserFieldValueException("lastName is blank");
+        }
+
         Optional<UserEntity> userWithThisEmail;
         userWithThisEmail =  userRepository.findUserByEmail(email);
 
         if (userWithThisEmail.isPresent()){
-            throw new IllegalArgumentException("User with this email already exists");
+            throw new IllegalUserFieldValueException("User with this email already exists");
         }
         UserEntity userEntity = new UserEntity(firstName, lastName, email);
         userRepository.save(userEntity);
@@ -57,25 +71,23 @@ public class UserService {
 
     public Optional<UserEntity> getUserByExternalId(UUID externalId) { return userRepository.findUserByExternalId(externalId); }
 
-    public Optional<UserDTO> getUserDTOByExternalId(UUID externalId) {
+    public Optional<UserDTO> getUserDTOByExternalId(UUID externalId)  {
         return userMapper.optionalUserEntityToOptionalUserDTO(userRepository.findUserByExternalId(externalId));
     }
 
     public Optional<UserEntity> getUserByEmail(String email){
         return userRepository.findUserByEmail(email);
     }
-    public Optional<UserDTO> getUserDTOByEmail(String email){
+    public Optional<UserDTO> getUserDTOByEmail(String email)  {
         return userMapper.optionalUserEntityToOptionalUserDTO(userRepository.findUserByEmail(email));
     }
 
-    public Set<UserEntity> searchUsers(String searchKeyword){
+    public List<UserEntity> searchUsers(String searchKeyword){
      return userRepository.searchUserEntities(searchKeyword);
     }
 
-    public Set<UserDTO> searchUsersDTOs(String searchKeyword){
-        return userRepository.searchUserEntities(searchKeyword).stream().map(u -> userMapper.userEntityToUserDTO(u)).collect(Collectors.toSet());
+    public List<UserDTO> searchUsersDTOs(String searchKeyword){
+        return userRepository.searchUserEntities(searchKeyword).stream().map(u -> userMapper.userEntityToUserDTO(u)).collect(Collectors.toList());
     }
-
-
 
 }

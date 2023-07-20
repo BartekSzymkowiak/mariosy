@@ -1,15 +1,15 @@
 package com.deloitte.ads.mariosy.controller;
 
 import com.deloitte.ads.mariosy.DTO.UserDTO;
+import com.deloitte.ads.mariosy.service.IllegalUserFieldValueException;
 import com.deloitte.ads.mariosy.service.UserService;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -24,12 +24,12 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public Set<UserDTO> getAllUsers() {
+    public List<UserDTO> getAllUsers() {
         return userService.getAllUsersDTOs();
     }
 
     @GetMapping(value = "/users", params = "searchKeyword")
-    public Set<UserDTO> searchUsers (@RequestParam("searchKeyword") String searchKeyword) {
+    public List<UserDTO> searchUsers (@RequestParam("searchKeyword") String searchKeyword) {
         return userService.searchUsersDTOs(searchKeyword);
     }
 
@@ -60,8 +60,12 @@ public class UserController {
         try {
              UserDTO responseUserDTO = userService.createUser(userDTO);
             return new ResponseEntity<UserDTO>(responseUserDTO, HttpStatus.CREATED);
-        }catch (Exception e){
+        }
+        catch (IllegalUserFieldValueException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

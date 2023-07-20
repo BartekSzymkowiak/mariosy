@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -24,7 +24,7 @@ public class MariosController {
     }
 
     @GetMapping("/marioses")
-    public Set<MariosDTO> getAllMarioses(){
+    public List<MariosDTO> getAllMarioses(){
         return mariosyService.getMariosesDTOs();
     }
 
@@ -52,12 +52,12 @@ public class MariosController {
     }
 
     @GetMapping("/users/{userExternalId}/marioses/created")
-    public Set<MariosDTO> getMariosesCreatedByUser(@PathVariable("userExternalId") UUID userExternalId){
+    public List<MariosDTO> getMariosesCreatedByUser(@PathVariable("userExternalId") UUID userExternalId){
         return mariosyService.getMariosesDTOsCreatedByUser(userExternalId);
     }
 
     @GetMapping("/users/{userExternalId}/marioses/received")
-    public Set<MariosDTO> getSortedMariosesReceivedByUser(@PathVariable UUID userExternalId){
+    public List<MariosDTO> getSortedMariosesReceivedByUser(@PathVariable UUID userExternalId){
         return mariosyService.getMariosesDTOsReceivedByUser(userExternalId);
     }
 

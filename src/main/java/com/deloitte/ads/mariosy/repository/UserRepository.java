@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -14,18 +15,18 @@ public interface UserRepository extends CrudRepository<UserEntity,Long> {
 
     Optional <UserEntity> findUserByEmail(String str);
 
-    Set<UserEntity> findUsersByIdIn(Set<Long> ids);
+    List<UserEntity> findUsersByIdIn(Set<Long> ids);
 
     Optional <UserEntity> findUserById(Long id);
 
     Optional <UserEntity> findUserByExternalId(UUID externalId);
 
-    Set<UserEntity> findUsersByExternalIdIn(Set<UUID> externalIds);
+    List<UserEntity> findUsersByExternalIdIn(Set<UUID> externalIds);
 
     @Query("SELECT u FROM user_account u WHERE "
             + " lower(u.firstName) LIKE lower(concat('%', ?1,'%'))"
             + " OR lower(u.lastName) LIKE lower(concat('%', ?1,'%'))"
             + " OR lower(u.email) LIKE lower(concat('%', ?1,'%'))"
             )
-    Set<UserEntity> searchUserEntities(String searchKeyword);
+    List<UserEntity> searchUserEntities(String searchKeyword);
 }
