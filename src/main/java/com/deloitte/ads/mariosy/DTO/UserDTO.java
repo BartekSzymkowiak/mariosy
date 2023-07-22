@@ -1,16 +1,13 @@
 package com.deloitte.ads.mariosy.DTO;
 
-
 import java.util.UUID;
 
 public class UserDTO {
-
-
     private UUID externalId;
     private String firstName;
     private String lastName;
     private String email;
-
+    private String additionalMessage;
     public UUID getExternalId() {
         return externalId;
     }
@@ -43,5 +40,11 @@ public class UserDTO {
         this.email = email;
     }
 
+    public String getAdditionalMessage() {
+        return additionalMessage;
+    }
 
+    public void setAdditionalMessage(String additionalMessage) {
+        this.additionalMessage = additionalMessage;
+    }
 }

@@ -3,11 +3,13 @@
     "marioses": [
       {
         "comment": "Lorem ipsum",
-        "type": 1
+        "type": 1,
+        "title": "Loooorem ipsum"
       },
       {
         "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sodales commodo porta. Integer commodo nisi eget mi porta, sit amet tempor lacus molestie.",
-        "type": 3
+        "type": 3,
+        "title": "Loooorem ipsum2"
       }
     ],
     "users": [
@@ -37,11 +39,13 @@
     "marioses": [
       {
         "comment": "Lorem ipsum 123",
-        "type": 2
+        "type": 2,
+        "title": "Loooorem ipsum3"
       },
       {
         "comment": "123 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sodales commodo porta. Integer commodo nisi eget mi porta, sit amet tempor lacus molestie.",
-        "type": 4
+        "type": 4,
+        "title": "Loooorem ipsum4"
       }
     ],
     "users": [

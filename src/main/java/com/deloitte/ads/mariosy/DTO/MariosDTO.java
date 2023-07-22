@@ -12,9 +12,13 @@ public class MariosDTO {
     private UUID externalId;
     private UUID creatorExternalId;
     private Set<UUID> receiversExternalIds;
+    private String title;
+
     private String comment;
     private MariosType type;
     private Instant creationInstant;
+
+    private String additionalMessage;
 
     public UUID getExternalId() {
         return externalId;
@@ -39,6 +43,13 @@ public class MariosDTO {
     public void setReceiversExternalIds(Set<UUID> receiversIds) {
         this.receiversExternalIds = receiversIds;
     }
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getComment() {
         return comment;
@@ -61,6 +72,14 @@ public class MariosDTO {
     }
     public void setCreationInstant(Instant creationInstant) {
         this.creationInstant = creationInstant;
+    }
+
+    public String getAdditionalMessage() {
+        return additionalMessage;
+    }
+
+    public void setAdditionalMessage(String additionalMessage) {
+        this.additionalMessage = additionalMessage;
     }
 
 }

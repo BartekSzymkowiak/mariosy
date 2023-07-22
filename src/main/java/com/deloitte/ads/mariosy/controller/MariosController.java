@@ -42,12 +42,14 @@ public class MariosController {
     public ResponseEntity<MariosDTO> createMarios(@RequestBody @NotNull MariosDTO mariosDTO){
         try{
              MariosDTO returnMariosDTO = mariosyService.createMarios(mariosDTO);
-            return new ResponseEntity<MariosDTO>(returnMariosDTO, HttpStatus.CREATED);
+            return new ResponseEntity<>(returnMariosDTO, HttpStatus.CREATED);
         }catch(IllegalMariosFieldValueException e){
-            return new ResponseEntity<MariosDTO>(HttpStatus.BAD_REQUEST);
+            MariosDTO emptyMariosDTO = new MariosDTO();
+            emptyMariosDTO.setAdditionalMessage(e.getMessage());
+            return new ResponseEntity<>(emptyMariosDTO, HttpStatus.BAD_REQUEST);
         }
         catch (Exception e){
-            return new ResponseEntity<MariosDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -59,6 +61,12 @@ public class MariosController {
     @GetMapping("/users/{userExternalId}/marioses/received")
     public List<MariosDTO> getSortedMariosesReceivedByUser(@PathVariable UUID userExternalId){
         return mariosyService.getMariosesDTOsReceivedByUser(userExternalId);
+    }
+
+    @DeleteMapping("/marioses/{mariosExternalId}")
+    public ResponseEntity deleteMarios(@PathVariable UUID mariosExternalId){
+        mariosyService.deleteMarios(mariosExternalId);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }

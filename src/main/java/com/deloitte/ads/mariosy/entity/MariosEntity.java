@@ -1,5 +1,7 @@
 package com.deloitte.ads.mariosy.entity;
 
+import com.deloitte.ads.mariosy.service.UserService;
+
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.Set;
@@ -19,6 +21,9 @@ public class MariosEntity {
 
     @Column(name = "creation_timestamp")
     private Instant creationInstant;
+
+    @Column(name = "title")
+    private String title;
 
     @Column(name = "comment", length = MAX_COMMENT_LENGTH)
     private String comment;
@@ -41,11 +46,12 @@ public class MariosEntity {
         this.externalId = UUID.randomUUID();
     }
 
-    public MariosEntity(MariosType type, String comment) {
+    public MariosEntity(MariosType type, String comment, String title) {
         this.type = type;
         this.comment = comment;
         this.creationInstant = Instant.now();
         this.externalId = UUID.randomUUID();
+        this.title = title;
     }
 
     public Long getId() {
@@ -64,6 +70,13 @@ public class MariosEntity {
         this.creationInstant = creationInstant;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
     public String getComment() {
         return comment;
     }
@@ -89,6 +102,10 @@ public class MariosEntity {
         for(UserEntity userEntity : receivers){
             userEntity.getCreated_marioses().add(this);
         }
+    }
+
+    public boolean removeReceiver(UserEntity userEntityToRemove){
+        return this.receivers.remove(userEntityToRemove);
     }
 
     public UserEntity getCreator() {

@@ -17,6 +17,7 @@ public class MariosMapper {
         mariosDTO.setExternalId(mariosEntity.getExternalId());
         mariosDTO.setCreatorExternalId(mariosEntity.getCreator().getExternalId());
         mariosDTO.setReceiversExternalIds(mariosEntity.getReceivers().stream().map(r -> r.getExternalId()).collect(Collectors.toSet()));
+        mariosDTO.setTitle(mariosEntity.getTitle());
         mariosDTO.setComment(mariosEntity.getComment());
         mariosDTO.setType(mariosEntity.getType());
         mariosDTO.setCreationInstant(mariosEntity.getCreationInstant());

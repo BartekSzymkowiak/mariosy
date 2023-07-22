@@ -47,6 +47,7 @@ public class MariosyService
         Set<UUID> receiversExternalIds = mariosDTO.getReceiversExternalIds();
         MariosType mariosType = mariosDTO.getType();
         String comment = mariosDTO.getComment();
+        String title = mariosDTO.getTitle();
 
         if (Objects.isNull(creatorExternalId)){
             throw new IllegalMariosFieldValueException("creatorId is null");
@@ -60,11 +61,17 @@ public class MariosyService
         else if (!MariosType.checkIfTypeExists(mariosType)){
             throw new IllegalMariosFieldValueException("mariosType does not exists");
         }
+        else if (StringUtils.isBlank(title)) {
+            throw new IllegalMariosFieldValueException("title is blank");
+        }
         else if (StringUtils.isBlank(comment)){
             throw new IllegalMariosFieldValueException("comment is blank");
         }
         else if(comment.length() > MariosEntity.MAX_COMMENT_LENGTH){
             throw new IllegalMariosFieldValueException("comment is too long");
+        }
+        else if(!MariosType.checkIfTypeExists(mariosType)){
+            throw new IllegalMariosFieldValueException("marios type does not exists");
         }
         else{
             Optional<UserEntity> optionalCreator = userRepository.findUserByExternalId(creatorExternalId);
@@ -76,7 +83,7 @@ public class MariosyService
             if (receivers.isEmpty() || receivers.size()!=receiversExternalIds.size()){
                 throw new IllegalMariosFieldValueException("Receivers are not correct");
             }
-            MariosEntity mariosEntity = new MariosEntity(mariosType, comment);
+            MariosEntity mariosEntity = new MariosEntity(mariosType, comment, title);
             mariosEntity.setCreator(optionalCreator.get());
             mariosEntity.setReceivers(Sets.newHashSet(receivers));
             mariosRepository.save(mariosEntity);
@@ -125,4 +132,12 @@ public class MariosyService
     }
 
 
+    public void deleteMarios(UUID mariosExternalId) {
+        Optional<MariosEntity> mariosEntityOptional = mariosRepository.findMariosEntityByExternalId(mariosExternalId);
+        if (mariosEntityOptional.isPresent()){
+            MariosEntity mariosEntity = mariosEntityOptional.get();
+            mariosRepository.delete(mariosEntity);
+        }
+
+    }
 }

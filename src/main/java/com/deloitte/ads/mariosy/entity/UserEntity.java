@@ -24,7 +24,7 @@ public class UserEntity {
     private Set<MariosEntity> received_marioses;
     @OneToMany(
             mappedBy = "creator",
-            cascade = {CascadeType.ALL})
+            cascade = {CascadeType.REMOVE})
     private Set<MariosEntity> created_marioses;
 
     public UserEntity(){

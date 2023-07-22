@@ -59,15 +59,22 @@ public class UserController {
     public ResponseEntity<UserDTO> addUser(@RequestBody UserDTO userDTO){
         try {
              UserDTO responseUserDTO = userService.createUser(userDTO);
-            return new ResponseEntity<UserDTO>(responseUserDTO, HttpStatus.CREATED);
+            return new ResponseEntity<>(responseUserDTO, HttpStatus.CREATED);
         }
         catch (IllegalUserFieldValueException e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            UserDTO emptyUserDTO = new UserDTO();
+            emptyUserDTO.setAdditionalMessage(e.getMessage());
+            return new ResponseEntity<>(emptyUserDTO,HttpStatus.BAD_REQUEST);
         }
         catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @DeleteMapping("/users/{userExternalId}")
+    public ResponseEntity deleteUser(@PathVariable UUID userExternalId){
+        userService.deleteUser(userExternalId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 
 }

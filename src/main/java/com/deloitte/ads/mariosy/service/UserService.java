@@ -1,6 +1,7 @@
 package com.deloitte.ads.mariosy.service;
 
 import com.deloitte.ads.mariosy.DTO.UserDTO;
+import com.deloitte.ads.mariosy.entity.MariosEntity;
 import com.deloitte.ads.mariosy.entity.UserEntity;
 import com.deloitte.ads.mariosy.mappers.UserMapper;
 import com.deloitte.ads.mariosy.repository.UserRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -50,8 +52,14 @@ public class UserService {
         else if (StringUtils.isBlank(firstName)){
             throw new IllegalUserFieldValueException("firstName is blank");
         }
+        else if (!StringUtils.isAlpha(firstName)){
+            throw new IllegalUserFieldValueException("firstName contains non alpha characters");
+        }
         else if (StringUtils.isBlank(lastName)){
             throw new IllegalUserFieldValueException("lastName is blank");
+        }
+        else if (!StringUtils.isAlpha(lastName)){
+            throw new IllegalUserFieldValueException("lastName contains non alpha characters");
         }
 
         Optional<UserEntity> userWithThisEmail;
@@ -88,6 +96,19 @@ public class UserService {
 
     public List<UserDTO> searchUsersDTOs(String searchKeyword){
         return userRepository.searchUserEntities(searchKeyword).stream().map(u -> userMapper.userEntityToUserDTO(u)).collect(Collectors.toList());
+    }
+
+    public void deleteUser(UUID userExternalId){
+        Optional<UserEntity> userEntityOptional = userRepository.findUserByExternalId(userExternalId);
+        if (userEntityOptional.isPresent()){
+            UserEntity userEntity = userEntityOptional.get();
+            Set<MariosEntity> receivedMarioses = userEntity.getReceived_marioses();
+            for (MariosEntity mariosEntity: receivedMarioses) {
+                mariosEntity.removeReceiver(userEntity);
+            }
+            userRepository.delete(userEntity);
+        }
+
     }
 
 }
