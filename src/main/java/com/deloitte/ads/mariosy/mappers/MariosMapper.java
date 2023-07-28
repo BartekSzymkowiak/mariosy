@@ -2,6 +2,7 @@ package com.deloitte.ads.mariosy.mappers;
 
 import com.deloitte.ads.mariosy.DTO.MariosDTO;
 import com.deloitte.ads.mariosy.entity.MariosEntity;
+import com.deloitte.ads.mariosy.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -21,6 +22,9 @@ public class MariosMapper {
         mariosDTO.setComment(mariosEntity.getComment());
         mariosDTO.setType(mariosEntity.getType());
         mariosDTO.setCreationInstant(mariosEntity.getCreationInstant());
+        UserEntity creatorEntity = mariosEntity.getCreator();
+        mariosDTO.setCreatorFirstName(creatorEntity.getFirstName());
+        mariosDTO.setCreatorLastName(creatorEntity.getLastName());
         return mariosDTO;
     }
 

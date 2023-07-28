@@ -4,6 +4,7 @@ import com.deloitte.ads.mariosy.DTO.MariosDTO;
 import com.deloitte.ads.mariosy.entity.MariosEntity;
 import com.google.common.collect.Sets;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,5 +18,11 @@ import java.util.Set;
 public class MariosyServiceTest {
     @Autowired
     MariosyService mariosyService;
+
+    @Test
+    public void shouldReturnAllMarioses(){
+
+    }
+
 
 }

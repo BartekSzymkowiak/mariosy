@@ -10,7 +10,8 @@ import java.util.UUID;
 @Entity()
 public class MariosEntity {
 
-    public static final int MAX_COMMENT_LENGTH = 500;
+    public static final int MAX_COMMENT_LENGTH = 255;
+    public static final int MAX_TITLE_LENGTH = 127;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,7 +23,7 @@ public class MariosEntity {
     @Column(name = "creation_timestamp")
     private Instant creationInstant;
 
-    @Column(name = "title")
+    @Column(name = "title", length = MAX_TITLE_LENGTH)
     private String title;
 
     @Column(name = "comment", length = MAX_COMMENT_LENGTH)

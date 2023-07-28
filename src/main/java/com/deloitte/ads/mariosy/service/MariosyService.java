@@ -70,6 +70,9 @@ public class MariosyService
         else if(comment.length() > MariosEntity.MAX_COMMENT_LENGTH){
             throw new IllegalMariosFieldValueException("comment is too long");
         }
+        else if(title.length() > MariosEntity.MAX_TITLE_LENGTH) {
+            throw new IllegalMariosFieldValueException("title is too long");
+        }
         else if(!MariosType.checkIfTypeExists(mariosType)){
             throw new IllegalMariosFieldValueException("marios type does not exists");
         }

@@ -20,6 +20,10 @@ public class MariosDTO {
 
     private String additionalMessage;
 
+    private String creatorFirstName;
+
+    private String creatorLastName;
+
     public UUID getExternalId() {
         return externalId;
     }
@@ -80,6 +84,22 @@ public class MariosDTO {
 
     public void setAdditionalMessage(String additionalMessage) {
         this.additionalMessage = additionalMessage;
+    }
+
+    public String getCreatorFirstName() {
+        return creatorFirstName;
+    }
+
+    public void setCreatorFirstName(String creatorFirstName) {
+        this.creatorFirstName = creatorFirstName;
+    }
+
+    public String getCreatorLastName() {
+        return creatorLastName;
+    }
+
+    public void setCreatorLastName(String creatorLastName) {
+        this.creatorLastName = creatorLastName;
     }
 
 }
