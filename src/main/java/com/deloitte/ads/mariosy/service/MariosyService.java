@@ -11,6 +11,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -40,6 +43,12 @@ public class MariosyService
     public List<MariosDTO> getMariosesDTOs() {
         return ImmutableList.copyOf( mariosRepository.findAll()).stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toList());
     }
+
+    public List<MariosDTO> getPaginatedMariosesDTOs(Integer page, Integer size) {
+        Pageable pageableSortedByCreation = PageRequest.of(page, size, Sort.by("creationInstant").descending());
+        return ImmutableList.copyOf( mariosRepository.findAllBy(pageableSortedByCreation)).stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toList());
+    }
+
 
     public MariosDTO createMarios(MariosDTO mariosDTO) throws IllegalMariosFieldValueException {
 
@@ -96,12 +105,12 @@ public class MariosyService
 
     public Set<MariosEntity> getMariosesCreatedByUser(UUID creatorExternalId){
         Set<MariosEntity> marioses;
-        marioses = Sets.newHashSet(mariosRepository.findMariosEntitiesByCreator_ExternalId(creatorExternalId));
+        marioses = Sets.newHashSet(mariosRepository.findMariosEntitiesByCreator_ExternalIdOrderByCreationInstantDesc(creatorExternalId));
         return marioses;
     }
 
     public List<MariosDTO> getMariosesDTOsCreatedByUser(UUID creatorExternalId){
-        return ImmutableList.copyOf(mariosRepository.findMariosEntitiesByCreator_ExternalId(creatorExternalId)).stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toList());
+        return ImmutableList.copyOf(mariosRepository.findMariosEntitiesByCreator_ExternalIdOrderByCreationInstantDesc(creatorExternalId)).stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toList());
     }
 
     public Set<MariosEntity> getMariosesReceivedByUser(UUID receiverExternalId){

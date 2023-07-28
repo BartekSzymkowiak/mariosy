@@ -1,6 +1,7 @@
 package com.deloitte.ads.mariosy.controller;
 
 import com.deloitte.ads.mariosy.DTO.MariosDTO;
+import com.deloitte.ads.mariosy.DTO.UserDTO;
 import com.deloitte.ads.mariosy.service.IllegalMariosFieldValueException;
 import com.deloitte.ads.mariosy.service.MariosyService;
 import com.sun.istack.NotNull;
@@ -26,6 +27,11 @@ public class MariosController {
     @GetMapping("/marioses")
     public List<MariosDTO> getAllMarioses(){
         return mariosyService.getMariosesDTOs();
+    }
+
+    @GetMapping(value = "/marioses", params = {"page","size"})
+    public List<MariosDTO> getAllMariosesWithPaginationAndOrder(@RequestParam Integer page, @RequestParam Integer size){
+        return mariosyService.getPaginatedMariosesDTOs(page, size);
     }
 
     @GetMapping("/marioses/{mariosExternalId}")
