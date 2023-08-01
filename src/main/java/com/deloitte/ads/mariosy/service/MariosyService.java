@@ -150,6 +150,10 @@ public class MariosyService
             MariosEntity mariosEntity = mariosEntityOptional.get();
             mariosRepository.delete(mariosEntity);
         }
-
     }
+
+    public List<MariosType> getMariosTypes(){
+        return List.of(MariosType.values());
+    }
+
 }

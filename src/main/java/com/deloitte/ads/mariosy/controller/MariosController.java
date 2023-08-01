@@ -2,6 +2,7 @@ package com.deloitte.ads.mariosy.controller;
 
 import com.deloitte.ads.mariosy.DTO.MariosDTO;
 import com.deloitte.ads.mariosy.DTO.UserDTO;
+import com.deloitte.ads.mariosy.entity.MariosType;
 import com.deloitte.ads.mariosy.service.IllegalMariosFieldValueException;
 import com.deloitte.ads.mariosy.service.MariosyService;
 import com.sun.istack.NotNull;
@@ -73,6 +74,11 @@ public class MariosController {
     public ResponseEntity deleteMarios(@PathVariable UUID mariosExternalId){
         mariosyService.deleteMarios(mariosExternalId);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/marioses/types")
+    public List<MariosType> getAllMariosTypes(){
+        return mariosyService.getMariosTypes();
     }
 
 }
