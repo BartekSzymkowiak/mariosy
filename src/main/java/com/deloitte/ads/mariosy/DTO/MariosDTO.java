@@ -3,6 +3,7 @@ package com.deloitte.ads.mariosy.DTO;
 import com.deloitte.ads.mariosy.entity.MariosType;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -23,6 +24,8 @@ public class MariosDTO {
     private String creatorFirstName;
 
     private String creatorLastName;
+
+    private List<String> receiversNames;
 
     public UUID getExternalId() {
         return externalId;
@@ -102,4 +105,11 @@ public class MariosDTO {
         this.creatorLastName = creatorLastName;
     }
 
+    public List<String> getReceiversNames() {
+        return receiversNames;
+    }
+
+    public void setReceiversNames(List<String> receiversNames) {
+        this.receiversNames = receiversNames;
+    }
 }
