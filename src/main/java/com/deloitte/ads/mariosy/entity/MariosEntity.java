@@ -11,7 +11,7 @@ import java.util.UUID;
 public class MariosEntity {
 
     public static final int MAX_COMMENT_LENGTH = 255;
-    public static final int MAX_TITLE_LENGTH = 127;
+    public static final int MAX_TITLE_LENGTH = 63;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

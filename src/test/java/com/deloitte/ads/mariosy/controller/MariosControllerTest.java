@@ -27,6 +27,11 @@ public class MariosControllerTest {
     private MariosController mariosController;
 
 
+
+}
+
+
+
 //    @Test
 //    @Transactional
 //    public void shouldBeMoreMarioses(){
@@ -46,7 +51,3 @@ public class MariosControllerTest {
 //        Assertions.assertEquals(mariosesCount+1, newMariosesCount);
 //    }
 
-
-
-
-}
