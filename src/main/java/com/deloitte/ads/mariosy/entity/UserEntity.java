@@ -1,6 +1,7 @@
 package com.deloitte.ads.mariosy.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -36,6 +37,7 @@ public class UserEntity {
         this.lastName = lastName;
         this.email = email;
         this.externalId = UUID.randomUUID();
+        this.created_marioses = new HashSet<>();
     }
 
     public Long getId() {

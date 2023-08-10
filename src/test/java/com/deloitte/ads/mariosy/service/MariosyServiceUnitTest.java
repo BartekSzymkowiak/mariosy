@@ -7,29 +7,26 @@ import com.deloitte.ads.mariosy.entity.UserEntity;
 import com.deloitte.ads.mariosy.mappers.MariosMapper;
 import com.deloitte.ads.mariosy.repository.MariosRepository;
 import com.deloitte.ads.mariosy.repository.UserRepository;
-import org.apache.catalina.User;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.junit.runner.RunWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
+import static org.assertj.core.api.FactoryBasedNavigableListAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.Mockito.when;
 
-
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
 public class MariosyServiceUnitTest {
 
     @Mock
@@ -65,8 +62,7 @@ public class MariosyServiceUnitTest {
         // given
         UserEntity creator = this.users.get(0);
         UUID receiverExternalId = UUID.randomUUID();
-        // creator.getExternalId()) ??? ???
-        when(userRepository.findUserByExternalId(any(UUID.class))).thenReturn(Optional.of(creator));
+        when(userRepository.findUserByExternalId(creator.getExternalId())).thenReturn(Optional.of(creator));
         when(userRepository.findUsersByExternalIdIn(anySet())).thenReturn(new ArrayList<UserEntity>());
 
         MariosDTO mariosDTO = new MariosDTO();
@@ -76,14 +72,54 @@ public class MariosyServiceUnitTest {
         mariosDTO.setType(MariosType.MARIOS_T1);
         mariosDTO.setReceiversExternalIds(new HashSet<UUID>(Arrays.asList(receiverExternalId)));
         // when
-        mariosyService.createMarios(mariosDTO);
-
         // then
-
-
+        assertThrows(IllegalMariosFieldValueException.class, () -> mariosyService.createMarios(mariosDTO));
     }
 
+    @Test
+    public void shouldNotCreateMariosWithReceiverIdEqualsToSenderId(){
+        // given
+        UserEntity creator = this.users.get(0);
+        UUID creatorExternalId = creator.getExternalId();
 
+        MariosDTO mariosDTO = new MariosDTO();
+        mariosDTO.setCreatorExternalId(creatorExternalId);
+        mariosDTO.setTitle("title one");
+        mariosDTO.setComment("comment one");
+        mariosDTO.setType(MariosType.MARIOS_T1);
+        mariosDTO.setReceiversExternalIds(new HashSet<UUID>(Arrays.asList(creatorExternalId)));
+        // when
+        // then
+        assertThrows(IllegalMariosFieldValueException.class, () -> mariosyService.createMarios(mariosDTO));
+    }
 
+    @Test
+    public void shouldCreateMarios(){
+        // given
+        UserEntity creator = this.users.get(0);
+        UserEntity receiver = this.users.get(1);
+
+        when(userRepository.findUserByExternalId(creator.getExternalId())).thenReturn(Optional.of(creator));
+        when(userRepository.findUsersByExternalIdIn(new HashSet<>(Arrays.asList(receiver.getExternalId())))).thenReturn(Arrays.asList(receiver));
+
+        MariosDTO mariosDTO = new MariosDTO();
+        mariosDTO.setCreatorExternalId(creator.getExternalId());
+        mariosDTO.setTitle("title one");
+        mariosDTO.setComment("comment one");
+        mariosDTO.setType(MariosType.MARIOS_T1);
+        mariosDTO.setReceiversExternalIds(new HashSet<UUID>(Arrays.asList(receiver.getExternalId())));
+        // when
+        try {
+            MariosDTO returnedMariosDTO = mariosyService.createMarios(mariosDTO);
+            // then
+            assertNotNull(returnedMariosDTO.getExternalId());
+            assertEquals(returnedMariosDTO.getTitle(), mariosDTO.getTitle());
+            assertEquals(returnedMariosDTO.getComment(), mariosDTO.getComment());
+            assertEquals(returnedMariosDTO.getCreatorExternalId(), creator.getExternalId());
+            assertIterableEquals(returnedMariosDTO.getReceiversExternalIds(),new HashSet<>(Arrays.asList(receiver.getExternalId())));
+        } catch (IllegalMariosFieldValueException e) {
+            fail(String.format("createMarios should not throw IllegalMariosFieldValueException: %s",e));
+        }
+    }
 
 }
