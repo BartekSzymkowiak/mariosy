@@ -1,7 +1,5 @@
 package com.deloitte.ads.mariosy.entity;
 
-import com.deloitte.ads.mariosy.service.UserService;
-
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.Set;
@@ -43,7 +41,7 @@ public class MariosEntity {
     @JoinColumn(name = "ref_creator_id")
     private UserEntity creator;
 
-    public MariosEntity(){
+    public MariosEntity() {
         this.externalId = UUID.randomUUID();
     }
 
@@ -55,10 +53,6 @@ public class MariosEntity {
         this.title = title;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public UUID getExternalId() {
         return externalId;
     }
@@ -67,31 +61,16 @@ public class MariosEntity {
         return creationInstant;
     }
 
-    public void setCreationInstant(Instant creationInstant) {
-        this.creationInstant = creationInstant;
-    }
-
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
     public String getComment() {
         return comment;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
     public MariosType getType() {
         return type;
-    }
-
-    public void setType(MariosType type) {
-        this.type = type;
     }
 
     public Set<UserEntity> getReceivers() {
@@ -100,12 +79,12 @@ public class MariosEntity {
 
     public void setReceivers(Set<UserEntity> receivers) {
         this.receivers = receivers;
-        for(UserEntity userEntity : receivers){
+        for (UserEntity userEntity : receivers) {
             userEntity.getCreated_marioses().add(this);
         }
     }
 
-    public boolean removeReceiver(UserEntity userEntityToRemove){
+    public boolean removeReceiver(UserEntity userEntityToRemove) {
         return this.receivers.remove(userEntityToRemove);
     }
 

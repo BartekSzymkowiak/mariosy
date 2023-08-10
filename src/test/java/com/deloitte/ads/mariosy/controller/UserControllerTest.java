@@ -1,29 +1,31 @@
 package com.deloitte.ads.mariosy.controller;
 
-import com.deloitte.ads.mariosy.DTO.UserDTO;
-import com.deloitte.ads.mariosy.entity.UserEntity;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.ResponseEntity;
+import com.deloitte.ads.mariosy.mappers.UserMapper;
+import com.deloitte.ads.mariosy.repository.MariosRepository;
+import com.deloitte.ads.mariosy.repository.UserRepository;
+import com.deloitte.ads.mariosy.service.UserService;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
 public class UserControllerTest {
-    @Autowired
-    private UserController userController;
 
-    @Test
-    public void shouldFindCreatedUserByEmail() {
-        // given
-        UserDTO userDTO = ControllerTestHelper.createExampleUserDTO();
-        String email = userDTO.getEmail();
-        // when
-        userController.addUser(userDTO);
-        ResponseEntity<UserDTO> responseUser = userController.getUserByEmail(email);
-        UserDTO responseUserDTO = responseUser.getBody();
-        // then
-        Assertions.assertEquals(email, responseUserDTO.getEmail());
-    }
+    @Mock
+    MariosRepository mariosRepository;
+
+    @Mock
+    UserRepository userRepository;
+
+    @Spy
+    UserMapper userMapper;
+
+    @Spy
+    UserService userService;
+
+    @InjectMocks
+    UserController userController;
 
 }

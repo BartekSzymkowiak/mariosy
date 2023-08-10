@@ -21,8 +21,7 @@ import java.util.stream.Collectors;
 
 
 @Service
-public class MariosyService
-{
+public class MariosyService {
     private final UserRepository userRepository;
 
     private final MariosRepository mariosRepository;
@@ -36,19 +35,14 @@ public class MariosyService
         this.mariosMapper = mariosMapper;
     }
 
-    public Set<MariosEntity> getMarioses() {
-        return Sets.newHashSet(mariosRepository.findAll());
-    }
-
     public List<MariosDTO> getMariosesDTOs() {
-        return ImmutableList.copyOf( mariosRepository.findAll()).stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toList());
+        return ImmutableList.copyOf(mariosRepository.findAll()).stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toList());
     }
 
     public List<MariosDTO> getPaginatedMariosesDTOs(Integer page, Integer size) {
         Pageable pageableSortedByCreation = PageRequest.of(page, size, Sort.by("creationInstant").descending());
-        return ImmutableList.copyOf( mariosRepository.findAllBy(pageableSortedByCreation)).stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toList());
+        return ImmutableList.copyOf(mariosRepository.findAllBy(pageableSortedByCreation)).stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toList());
     }
-
 
     public MariosDTO createMarios(MariosDTO mariosDTO) throws IllegalMariosFieldValueException {
 
@@ -58,41 +52,32 @@ public class MariosyService
         String comment = mariosDTO.getComment();
         String title = mariosDTO.getTitle();
 
-        if (Objects.isNull(creatorExternalId)){
+        if (Objects.isNull(creatorExternalId)) {
             throw new IllegalMariosFieldValueException("creatorId is null");
-        }
-        else if (receiversExternalIds.isEmpty()){
+        } else if (receiversExternalIds.isEmpty()) {
             throw new IllegalMariosFieldValueException("receiversIds is empty");
-        }
-        else if (receiversExternalIds.contains(creatorExternalId)){
+        } else if (receiversExternalIds.contains(creatorExternalId)) {
             throw new IllegalMariosFieldValueException("receiversIds contains creatorId");
-        }
-        else if (!MariosType.checkIfTypeExists(mariosType)){
+        } else if (!MariosType.checkIfTypeExists(mariosType)) {
             throw new IllegalMariosFieldValueException("mariosType does not exists");
-        }
-        else if (StringUtils.isBlank(title)) {
+        } else if (StringUtils.isBlank(title)) {
             throw new IllegalMariosFieldValueException("title is blank");
-        }
-        else if (StringUtils.isBlank(comment)){
+        } else if (StringUtils.isBlank(comment)) {
             throw new IllegalMariosFieldValueException("comment is blank");
-        }
-        else if(comment.length() > MariosEntity.MAX_COMMENT_LENGTH){
+        } else if (comment.length() > MariosEntity.MAX_COMMENT_LENGTH) {
             throw new IllegalMariosFieldValueException("comment is too long");
-        }
-        else if(title.length() > MariosEntity.MAX_TITLE_LENGTH) {
+        } else if (title.length() > MariosEntity.MAX_TITLE_LENGTH) {
             throw new IllegalMariosFieldValueException("title is too long");
-        }
-        else if(!MariosType.checkIfTypeExists(mariosType)){
+        } else if (!MariosType.checkIfTypeExists(mariosType)) {
             throw new IllegalMariosFieldValueException("marios type does not exists");
-        }
-        else{
+        } else {
             Optional<UserEntity> optionalCreator = userRepository.findUserByExternalId(creatorExternalId);
             List<UserEntity> receivers = userRepository.findUsersByExternalIdIn(receiversExternalIds);
 
-            if (optionalCreator.isEmpty()){
+            if (optionalCreator.isEmpty()) {
                 throw new IllegalMariosFieldValueException("Creator does not exists");
             }
-            if (receivers.isEmpty() || receivers.size()!=receiversExternalIds.size()){
+            if (receivers.isEmpty() || receivers.size() != receiversExternalIds.size()) {
                 throw new IllegalMariosFieldValueException("Receivers are not correct");
             }
             MariosEntity mariosEntity = new MariosEntity(mariosType, comment, title);
@@ -103,56 +88,37 @@ public class MariosyService
         }
     }
 
-    public Set<MariosEntity> getMariosesCreatedByUser(UUID creatorExternalId){
-        Set<MariosEntity> marioses;
-        marioses = Sets.newHashSet(mariosRepository.findMariosEntitiesByCreator_ExternalIdOrderByCreationInstantDesc(creatorExternalId));
-        return marioses;
-    }
-
-    public List<MariosDTO> getMariosesDTOsCreatedByUser(UUID creatorExternalId){
+    public List<MariosDTO> getMariosesDTOsCreatedByUser(UUID creatorExternalId) {
         return ImmutableList.copyOf(mariosRepository.findMariosEntitiesByCreator_ExternalIdOrderByCreationInstantDesc(creatorExternalId)).stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toList());
     }
 
-    public Set<MariosEntity> getMariosesReceivedByUser(UUID receiverExternalId){
+    public List<MariosDTO> getMariosesDTOsReceivedByUser(UUID receiverExternalId) {
 
         Optional<UserEntity> userEntity = userRepository.findUserByExternalId(receiverExternalId);
-        if (userEntity.isEmpty()){
-            throw new IllegalArgumentException("User does not exists");
-        }
-        Set<MariosEntity> marioses = userEntity.get().getReceived_marioses();
-        return marioses;
-    }
-
-    public List<MariosDTO> getMariosesDTOsReceivedByUser(UUID receiverExternalId){
-
-        Optional<UserEntity> userEntity = userRepository.findUserByExternalId(receiverExternalId);
-        if (userEntity.isEmpty()){
+        if (userEntity.isEmpty()) {
             throw new IllegalArgumentException("User does not exists");
         }
         Set<MariosEntity> marioses = userEntity.get().getReceived_marioses();
         return marioses.stream().map(m -> mariosMapper.mariosEntityToMariosDTO(m)).collect(Collectors.toList());
     }
 
-    public Optional<MariosEntity> getMariosById(Long id){
-        return mariosRepository.findById(id);
+    public Optional<MariosEntity> getMariosByExternalId(UUID externalId) {
+        return mariosRepository.findMariosEntityByExternalId(externalId);
     }
-
-    public Optional<MariosEntity> getMariosByExternalId(UUID externalId) {return mariosRepository.findMariosEntityByExternalId(externalId);}
 
     public Optional<MariosDTO> getMariosDTOByExternalId(UUID externalId) {
         return mariosMapper.optionalMariosEntityToOptionalMariosDTO(mariosRepository.findMariosEntityByExternalId(externalId));
     }
 
-
     public void deleteMarios(UUID mariosExternalId) {
         Optional<MariosEntity> mariosEntityOptional = mariosRepository.findMariosEntityByExternalId(mariosExternalId);
-        if (mariosEntityOptional.isPresent()){
+        if (mariosEntityOptional.isPresent()) {
             MariosEntity mariosEntity = mariosEntityOptional.get();
             mariosRepository.delete(mariosEntity);
         }
     }
 
-    public List<MariosType> getMariosTypes(){
+    public List<MariosType> getMariosTypes() {
         return List.of(MariosType.values());
     }
 

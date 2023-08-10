@@ -50,6 +50,7 @@ public class MariosDTO {
     public void setReceiversExternalIds(Set<UUID> receiversIds) {
         this.receiversExternalIds = receiversIds;
     }
+
     public String getTitle() {
         return title;
     }
@@ -77,6 +78,7 @@ public class MariosDTO {
     public Instant getCreationInstant() {
         return creationInstant;
     }
+
     public void setCreationInstant(Instant creationInstant) {
         this.creationInstant = creationInstant;
     }

@@ -28,7 +28,7 @@ public class UserEntity {
             cascade = {CascadeType.REMOVE})
     private Set<MariosEntity> created_marioses;
 
-    public UserEntity(){
+    public UserEntity() {
         this.externalId = UUID.randomUUID();
     }
 
@@ -40,30 +40,16 @@ public class UserEntity {
         this.created_marioses = new HashSet<>();
     }
 
-    public Long getId() {
-        return id;
-    }
     public UUID getExternalId() {
         return externalId;
-    }
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getEmail() {

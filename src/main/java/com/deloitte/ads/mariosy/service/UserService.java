@@ -29,43 +29,34 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public List<UserEntity> getAllUsers() {
-        return ImmutableList.copyOf(userRepository.findAll());
-    }
-
     public List<UserDTO> getAllUsersDTOs() {
         return ImmutableList.copyOf(userRepository.findAll()).stream().map(u -> userMapper.userEntityToUserDTO(u)).collect(Collectors.toList());
     }
 
-    public UserDTO createUser(UserDTO userDTO) throws IllegalUserFieldValueException{
+    public UserDTO createUser(UserDTO userDTO) throws IllegalUserFieldValueException {
 
         String firstName = userDTO.getFirstName();
         String lastName = userDTO.getLastName();
         String email = userDTO.getEmail();
 
-        if (StringUtils.isBlank(email)){
+        if (StringUtils.isBlank(email)) {
             throw new IllegalUserFieldValueException("email is blank");
-        }
-        else if(!userMapper.isEmailValid(email)){
+        } else if (!userMapper.isEmailValid(email)) {
             throw new IllegalUserFieldValueException("email is not valid");
-        }
-        else if (StringUtils.isBlank(firstName)){
+        } else if (StringUtils.isBlank(firstName)) {
             throw new IllegalUserFieldValueException("firstName is blank");
-        }
-        else if (!StringUtils.isAlpha(firstName)){
+        } else if (!StringUtils.isAlpha(firstName)) {
             throw new IllegalUserFieldValueException("firstName contains non alpha characters");
-        }
-        else if (StringUtils.isBlank(lastName)){
+        } else if (StringUtils.isBlank(lastName)) {
             throw new IllegalUserFieldValueException("lastName is blank");
-        }
-        else if (!StringUtils.isAlpha(lastName)){
+        } else if (!StringUtils.isAlpha(lastName)) {
             throw new IllegalUserFieldValueException("lastName contains non alpha characters");
         }
 
         Optional<UserEntity> userWithThisEmail;
-        userWithThisEmail =  userRepository.findUserByEmail(email);
+        userWithThisEmail = userRepository.findUserByEmail(email);
 
-        if (userWithThisEmail.isPresent()){
+        if (userWithThisEmail.isPresent()) {
             throw new IllegalUserFieldValueException("User with this email already exists");
         }
         UserEntity userEntity = new UserEntity(firstName, lastName, email);
@@ -73,43 +64,28 @@ public class UserService {
         return userMapper.userEntityToUserDTO(userEntity);
     }
 
-    public Optional<UserEntity> getUserById(Long id){
-        return userRepository.findUserById(id);
-    }
-
-    public Optional<UserEntity> getUserByExternalId(UUID externalId) { return userRepository.findUserByExternalId(externalId); }
-
-    public Optional<UserDTO> getUserDTOByExternalId(UUID externalId)  {
+    public Optional<UserDTO> getUserDTOByExternalId(UUID externalId) {
         return userMapper.optionalUserEntityToOptionalUserDTO(userRepository.findUserByExternalId(externalId));
     }
 
-    public Optional<UserEntity> getUserByEmail(String email){
-        return userRepository.findUserByEmail(email);
-    }
-    public Optional<UserDTO> getUserDTOByEmail(String email)  {
+    public Optional<UserDTO> getUserDTOByEmail(String email) {
         return userMapper.optionalUserEntityToOptionalUserDTO(userRepository.findUserByEmail(email));
     }
 
-    public List<UserEntity> searchUsers(String searchKeyword){
-     return userRepository.searchUserEntities(searchKeyword);
-    }
-
-    public List<UserDTO> searchUsersDTOs(String searchKeyword){
+    public List<UserDTO> searchUsersDTOs(String searchKeyword) {
         return userRepository.searchUserEntities(searchKeyword).stream().map(u -> userMapper.userEntityToUserDTO(u)).collect(Collectors.toList());
     }
 
-    public void deleteUser(UUID userExternalId){
+    public void deleteUser(UUID userExternalId) {
         Optional<UserEntity> userEntityOptional = userRepository.findUserByExternalId(userExternalId);
-        if (userEntityOptional.isPresent()){
+        if (userEntityOptional.isPresent()) {
             UserEntity userEntity = userEntityOptional.get();
             Set<MariosEntity> receivedMarioses = userEntity.getReceived_marioses();
-            for (MariosEntity mariosEntity: receivedMarioses) {
+            for (MariosEntity mariosEntity : receivedMarioses) {
                 mariosEntity.removeReceiver(userEntity);
             }
             userRepository.delete(userEntity);
         }
     }
-
-
 
 }

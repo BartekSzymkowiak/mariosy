@@ -11,15 +11,13 @@ import java.util.Set;
 import java.util.UUID;
 
 @Repository
-public interface UserRepository extends CrudRepository<UserEntity,Long> {
+public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
-    Optional <UserEntity> findUserByEmail(String str);
+    Optional<UserEntity> findUserByEmail(String str);
 
-    List<UserEntity> findUsersByIdIn(Set<Long> ids);
+    Optional<UserEntity> findUserById(Long id);
 
-    Optional <UserEntity> findUserById(Long id);
-
-    Optional <UserEntity> findUserByExternalId(UUID externalId);
+    Optional<UserEntity> findUserByExternalId(UUID externalId);
 
     List<UserEntity> findUsersByExternalIdIn(Set<UUID> externalIds);
 
@@ -27,6 +25,6 @@ public interface UserRepository extends CrudRepository<UserEntity,Long> {
             + " lower(u.firstName) LIKE lower(concat('%', ?1,'%'))"
             + " OR lower(u.lastName) LIKE lower(concat('%', ?1,'%'))"
             + " OR lower(u.email) LIKE lower(concat('%', ?1,'%'))"
-            )
+    )
     List<UserEntity> searchUserEntities(String searchKeyword);
 }

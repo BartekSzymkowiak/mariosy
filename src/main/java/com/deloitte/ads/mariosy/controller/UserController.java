@@ -29,18 +29,16 @@ public class UserController {
     }
 
     @GetMapping(value = "/users", params = "searchKeyword")
-    public List<UserDTO> searchUsers (@RequestParam("searchKeyword") String searchKeyword) {
+    public List<UserDTO> searchUsers(@RequestParam("searchKeyword") String searchKeyword) {
         return userService.searchUsersDTOs(searchKeyword);
     }
 
     @GetMapping(value = "/users", params = "email")
-    public ResponseEntity<UserDTO> getUserByEmail(@RequestParam String email)
-    {
-        Optional<UserDTO> userDTOOptional =  userService.getUserDTOByEmail(email);
-        if (userDTOOptional.isPresent()){
+    public ResponseEntity<UserDTO> getUserByEmail(@RequestParam String email) {
+        Optional<UserDTO> userDTOOptional = userService.getUserDTOByEmail(email);
+        if (userDTOOptional.isPresent()) {
             return new ResponseEntity<>(userDTOOptional.get(), HttpStatus.OK);
-        }
-        else{
+        } else {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
@@ -48,31 +46,29 @@ public class UserController {
     @GetMapping("/users/{userExternalId}")
     public ResponseEntity<UserDTO> getUserByExternalId(@PathVariable UUID userExternalId) {
         Optional<UserDTO> userDTOOptional = userService.getUserDTOByExternalId(userExternalId);
-        if (userDTOOptional.isEmpty()){
+        if (userDTOOptional.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }else{
+        } else {
             return new ResponseEntity<>(userDTOOptional.get(), HttpStatus.OK);
         }
     }
 
     @PostMapping("/users")
-    public ResponseEntity<UserDTO> addUser(@RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> addUser(@RequestBody UserDTO userDTO) {
         try {
-             UserDTO responseUserDTO = userService.createUser(userDTO);
+            UserDTO responseUserDTO = userService.createUser(userDTO);
             return new ResponseEntity<>(responseUserDTO, HttpStatus.CREATED);
-        }
-        catch (IllegalUserFieldValueException e){
+        } catch (IllegalUserFieldValueException e) {
             UserDTO emptyUserDTO = new UserDTO();
             emptyUserDTO.setAdditionalMessage(e.getMessage());
-            return new ResponseEntity<>(emptyUserDTO,HttpStatus.BAD_REQUEST);
-        }
-        catch (Exception e){
+            return new ResponseEntity<>(emptyUserDTO, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("/users/{userExternalId}")
-    public ResponseEntity deleteUser(@PathVariable UUID userExternalId){
+    public ResponseEntity deleteUser(@PathVariable UUID userExternalId) {
         userService.deleteUser(userExternalId);
         return new ResponseEntity(HttpStatus.OK);
     }

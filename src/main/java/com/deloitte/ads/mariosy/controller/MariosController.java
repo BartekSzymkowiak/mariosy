@@ -1,7 +1,6 @@
 package com.deloitte.ads.mariosy.controller;
 
 import com.deloitte.ads.mariosy.DTO.MariosDTO;
-import com.deloitte.ads.mariosy.DTO.UserDTO;
 import com.deloitte.ads.mariosy.entity.MariosType;
 import com.deloitte.ads.mariosy.service.IllegalMariosFieldValueException;
 import com.deloitte.ads.mariosy.service.MariosyService;
@@ -26,58 +25,57 @@ public class MariosController {
     }
 
     @GetMapping("/marioses")
-    public List<MariosDTO> getAllMarioses(){
+    public List<MariosDTO> getAllMarioses() {
         return mariosyService.getMariosesDTOs();
     }
 
-    @GetMapping(value = "/marioses", params = {"page","size"})
-    public List<MariosDTO> getAllMariosesWithPaginationAndOrder(@RequestParam Integer page, @RequestParam Integer size){
+    @GetMapping(value = "/marioses", params = {"page", "size"})
+    public List<MariosDTO> getAllMariosesWithPaginationAndOrder(@RequestParam Integer page, @RequestParam Integer size) {
         return mariosyService.getPaginatedMariosesDTOs(page, size);
     }
 
     @GetMapping("/marioses/{mariosExternalId}")
-    public ResponseEntity<MariosDTO> getMariosById(@PathVariable("mariosExternalId") UUID mariosExternalId){
+    public ResponseEntity<MariosDTO> getMariosById(@PathVariable("mariosExternalId") UUID mariosExternalId) {
         Optional<MariosDTO> mariosDTOOptional = mariosyService.getMariosDTOByExternalId(mariosExternalId);
-        if(mariosDTOOptional.isEmpty()){
+        if (mariosDTOOptional.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }else{
+        } else {
             return new ResponseEntity<>(mariosDTOOptional.get(), HttpStatus.OK);
         }
     }
 
     @PostMapping("/marioses")
-    public ResponseEntity<MariosDTO> createMarios(@RequestBody @NotNull MariosDTO mariosDTO){
-        try{
-             MariosDTO returnMariosDTO = mariosyService.createMarios(mariosDTO);
+    public ResponseEntity<MariosDTO> createMarios(@RequestBody @NotNull MariosDTO mariosDTO) {
+        try {
+            MariosDTO returnMariosDTO = mariosyService.createMarios(mariosDTO);
             return new ResponseEntity<>(returnMariosDTO, HttpStatus.CREATED);
-        }catch(IllegalMariosFieldValueException e){
+        } catch (IllegalMariosFieldValueException e) {
             MariosDTO emptyMariosDTO = new MariosDTO();
             emptyMariosDTO.setAdditionalMessage(e.getMessage());
             return new ResponseEntity<>(emptyMariosDTO, HttpStatus.BAD_REQUEST);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/users/{userExternalId}/marioses/created")
-    public List<MariosDTO> getMariosesCreatedByUser(@PathVariable("userExternalId") UUID userExternalId){
+    public List<MariosDTO> getMariosesCreatedByUser(@PathVariable("userExternalId") UUID userExternalId) {
         return mariosyService.getMariosesDTOsCreatedByUser(userExternalId);
     }
 
     @GetMapping("/users/{userExternalId}/marioses/received")
-    public List<MariosDTO> getSortedMariosesReceivedByUser(@PathVariable UUID userExternalId){
+    public List<MariosDTO> getSortedMariosesReceivedByUser(@PathVariable UUID userExternalId) {
         return mariosyService.getMariosesDTOsReceivedByUser(userExternalId);
     }
 
     @DeleteMapping("/marioses/{mariosExternalId}")
-    public ResponseEntity deleteMarios(@PathVariable UUID mariosExternalId){
+    public ResponseEntity deleteMarios(@PathVariable UUID mariosExternalId) {
         mariosyService.deleteMarios(mariosExternalId);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/marioses/types")
-    public List<MariosType> getAllMariosTypes(){
+    public List<MariosType> getAllMariosTypes() {
         return mariosyService.getMariosTypes();
     }
 

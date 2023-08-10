@@ -8,7 +8,7 @@ public enum MariosType {
     MARIOS_T5,
     MARIOS_T6;
 
-    public static boolean checkIfTypeExists (MariosType value) {
+    public static boolean checkIfTypeExists(MariosType value) {
         for (MariosType type : values()) {
             if (type.equals(value)) {
                 return true;

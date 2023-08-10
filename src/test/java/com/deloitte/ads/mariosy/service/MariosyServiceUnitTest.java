@@ -13,16 +13,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.*;
 
-import static org.assertj.core.api.FactoryBasedNavigableListAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.Mockito.when;
 
@@ -45,20 +40,20 @@ public class MariosyServiceUnitTest {
     public List<MariosEntity> marioses;
 
     @BeforeEach
-    public void initTestData(){
+    public void initTestData() {
         this.users = new ArrayList<UserEntity>();
-       this.users.add(new UserEntity("Jan","Janowski","janek@email.com"));
-       this.users.add(new UserEntity("Marta","Martowska","marta.marto@ko.com"));
-       this.users.add(new UserEntity("Mariusz","Mariuszewicz","mariuszek@email.pl"));
+        this.users.add(new UserEntity("Jan", "Janowski", "janek@email.com"));
+        this.users.add(new UserEntity("Marta", "Martowska", "marta.marto@ko.com"));
+        this.users.add(new UserEntity("Mariusz", "Mariuszewicz", "mariuszek@email.pl"));
 
-       this.marioses = new ArrayList<MariosEntity>();
-       this.marioses.add(new MariosEntity(MariosType.MARIOS_T1, "some comment", "good job"));
-       this.marioses.add(new MariosEntity(MariosType.MARIOS_T2, "other comment", "great job"));
-       this.marioses.add(new MariosEntity(MariosType.MARIOS_T3, "last comment", "nice job"));
+        this.marioses = new ArrayList<MariosEntity>();
+        this.marioses.add(new MariosEntity(MariosType.MARIOS_T1, "some comment", "good job"));
+        this.marioses.add(new MariosEntity(MariosType.MARIOS_T2, "other comment", "great job"));
+        this.marioses.add(new MariosEntity(MariosType.MARIOS_T3, "last comment", "nice job"));
     }
 
     @Test
-    public void shouldNotCreateMariosWithInvalidReceiverId(){
+    public void shouldNotCreateMariosWithInvalidReceiverId() {
         // given
         UserEntity creator = this.users.get(0);
         UUID receiverExternalId = UUID.randomUUID();
@@ -77,7 +72,7 @@ public class MariosyServiceUnitTest {
     }
 
     @Test
-    public void shouldNotCreateMariosWithReceiverIdEqualsToSenderId(){
+    public void shouldNotCreateMariosWithReceiverIdEqualsToSenderId() {
         // given
         UserEntity creator = this.users.get(0);
         UUID creatorExternalId = creator.getExternalId();
@@ -94,7 +89,7 @@ public class MariosyServiceUnitTest {
     }
 
     @Test
-    public void shouldCreateMarios(){
+    public void shouldCreateMarios() {
         // given
         UserEntity creator = this.users.get(0);
         UserEntity receiver = this.users.get(1);
@@ -116,9 +111,9 @@ public class MariosyServiceUnitTest {
             assertEquals(returnedMariosDTO.getTitle(), mariosDTO.getTitle());
             assertEquals(returnedMariosDTO.getComment(), mariosDTO.getComment());
             assertEquals(returnedMariosDTO.getCreatorExternalId(), creator.getExternalId());
-            assertIterableEquals(returnedMariosDTO.getReceiversExternalIds(),new HashSet<>(Arrays.asList(receiver.getExternalId())));
+            assertIterableEquals(returnedMariosDTO.getReceiversExternalIds(), new HashSet<>(Arrays.asList(receiver.getExternalId())));
         } catch (IllegalMariosFieldValueException e) {
-            fail(String.format("createMarios should not throw IllegalMariosFieldValueException: %s",e));
+            fail(String.format("createMarios should not throw IllegalMariosFieldValueException: %s", e));
         }
     }
 

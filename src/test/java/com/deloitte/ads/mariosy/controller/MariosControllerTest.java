@@ -1,35 +1,33 @@
 package com.deloitte.ads.mariosy.controller;
 
-import com.deloitte.ads.mariosy.DTO.MariosDTO;
-import com.deloitte.ads.mariosy.DTO.UserDTO;
-import com.deloitte.ads.mariosy.entity.MariosType;
-import com.google.common.collect.Sets;
-import org.apache.catalina.User;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
+import com.deloitte.ads.mariosy.mappers.MariosMapper;
+import com.deloitte.ads.mariosy.repository.MariosRepository;
+import com.deloitte.ads.mariosy.repository.UserRepository;
+import com.deloitte.ads.mariosy.service.MariosyService;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.HashSet;
-import java.util.Set;
-
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
 public class MariosControllerTest {
-    @Autowired
-    private UserController userController;
 
-    @Autowired
-    private MariosController mariosController;
+    @Mock
+    MariosRepository mariosRepository;
 
+    @Mock
+    UserRepository userRepository;
 
+    @Spy
+    MariosMapper mariosMapper;
 
+    @Spy
+    MariosyService mariosyService;
+
+    @InjectMocks
+    MariosController mariosController;
 }
-
 
 
 //    @Test

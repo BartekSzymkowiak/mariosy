@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -16,11 +15,11 @@ public class MariosMapper {
     public MariosMapper() {
     }
 
-    public MariosDTO mariosEntityToMariosDTO(MariosEntity mariosEntity){
+    public MariosDTO mariosEntityToMariosDTO(MariosEntity mariosEntity) {
         MariosDTO mariosDTO = new MariosDTO();
         mariosDTO.setExternalId(mariosEntity.getExternalId());
         mariosDTO.setCreatorExternalId(mariosEntity.getCreator().getExternalId());
-        List<UserEntity> receivers =  Lists.newArrayList(mariosEntity.getReceivers());
+        List<UserEntity> receivers = Lists.newArrayList(mariosEntity.getReceivers());
         mariosDTO.setReceiversExternalIds(receivers.stream().map(r -> r.getExternalId()).collect(Collectors.toSet()));
         mariosDTO.setTitle(mariosEntity.getTitle());
         mariosDTO.setComment(mariosEntity.getComment());
@@ -33,12 +32,11 @@ public class MariosMapper {
         return mariosDTO;
     }
 
-    public Optional<MariosDTO> optionalMariosEntityToOptionalMariosDTO(Optional<MariosEntity> mariosEntityOptional){
-        if (mariosEntityOptional.isPresent()){
-            return  Optional.ofNullable(mariosEntityToMariosDTO(mariosEntityOptional.get()));
+    public Optional<MariosDTO> optionalMariosEntityToOptionalMariosDTO(Optional<MariosEntity> mariosEntityOptional) {
+        if (mariosEntityOptional.isPresent()) {
+            return Optional.ofNullable(mariosEntityToMariosDTO(mariosEntityOptional.get()));
         }
         return Optional.ofNullable(null);
     }
-
 
 }

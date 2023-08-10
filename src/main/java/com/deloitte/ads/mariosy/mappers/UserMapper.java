@@ -24,13 +24,13 @@ public class UserMapper {
     }
 
     public Optional<UserDTO> optionalUserEntityToOptionalUserDTO(Optional<UserEntity> userEntityOptional) {
-        if (userEntityOptional.isPresent()){
-            return  Optional.ofNullable(userEntityToUserDTO(userEntityOptional.get()));
+        if (userEntityOptional.isPresent()) {
+            return Optional.ofNullable(userEntityToUserDTO(userEntityOptional.get()));
         }
         return Optional.ofNullable(null);
     }
 
-    public boolean isEmailValid(String email){
+    public boolean isEmailValid(String email) {
 
         String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
         Pattern pattern = java.util.regex.Pattern.compile(ePattern);
