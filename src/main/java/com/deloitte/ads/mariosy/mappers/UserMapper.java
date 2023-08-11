@@ -17,9 +17,7 @@ public class UserMapper {
     public UserDTO userEntityToUserDTO(UserEntity userEntity) {
         UserDTO userDTO = new UserDTO();
         userDTO.setExternalId(userEntity.getExternalId());
-        userDTO.setEmail(userEntity.getEmail());
-        userDTO.setFirstName(userEntity.getFirstName());
-        userDTO.setLastName(userEntity.getLastName());
+        userDTO.setUsername(userEntity.getUsername());
         return userDTO;
     }
 
@@ -30,13 +28,6 @@ public class UserMapper {
         return Optional.ofNullable(null);
     }
 
-    public boolean isEmailValid(String email) {
 
-        String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
-        Pattern pattern = java.util.regex.Pattern.compile(ePattern);
-        Matcher matcher = pattern.matcher(email);
-
-        return matcher.matches();
-    }
 
 }
