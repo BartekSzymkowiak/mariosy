@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -35,6 +36,22 @@ public class UserController {
     @PreAuthorize("hasAnyRole('client_user','client_admin')")
     public List<UserDTO> searchUsers(@RequestParam("searchKeyword") String searchKeyword) {
         return userService.searchUsersDTOs(searchKeyword);
+    }
+
+    @GetMapping("/users/{userExternalId}")
+    @PreAuthorize("hasRole('client_user')")
+    public ResponseEntity<UserDTO> getUserByExternalId(@PathVariable UUID userExternalId, JwtAuthenticationToken token) {
+        if (token.getName().equals(userExternalId.toString())) {
+            Optional<UserDTO> userDTOOptional = userService.getUserDTOByExternalId(userExternalId);
+            if (userDTOOptional.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<>(userDTOOptional.get(), HttpStatus.OK);
+            }
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/users")
