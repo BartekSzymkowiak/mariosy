@@ -1,7 +1,6 @@
 FROM amazoncorretto:17
 
 ENV DB_PROVIDER=postgresql
-ENV DB_HOST=bszymkowiakpostgresqldb.cc3ilfgcxaju.eu-central-1.rds.amazonaws.com
 ENV DB_PORT=5432
 ENV DB_DATABASE_NAME=mariosy
 ENV DB_USERNAME=postgresadmin
