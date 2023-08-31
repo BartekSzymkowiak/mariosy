@@ -66,5 +66,5 @@ variable "ecs_task_execution_role_arn" {
 variable "backend_task_public_api_ip" {
   description = "Backend task public api ip"
   sensitive   = false
-  default = "http://3.122.245.64:8083/api/v1/"
+  default = "http://3.71.53.131:8083/api/v1/"
 }
